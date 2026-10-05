@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Extract, build, and validate color palettes with OKLCH-based color relationships and WCAG 2.2 contrast checks in your browser.">
+    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+    <meta name="author" content="Ariyo Ardiwardana">
+    <meta name="theme-color" content="#f3f0e8">
+    <link rel="canonical" href="https://tools.astakula.com/color/">
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Color Palette Generator — Astakula Tools">
+    <meta property="og:description" content="Extract representative image colors, build structured palettes, generate tonal scales, and validate text contrast.">
+    <meta property="og:url" content="https://tools.astakula.com/color/">
+    <meta property="og:site_name" content="Astakula Tools">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Color Palette Generator — Astakula Tools">
+    <meta name="twitter:description" content="Perceptual palette generation with OKLCH and WCAG 2.2 contrast checks.">
+    <title>Color Palette Generator — Astakula Tools</title>
+    <script type="application/ld+json">
+    {
+      "@context":"https://schema.org",
+      "@graph":[
+        {"@type":"Organization","@id":"https://astakula.com/#organization","name":"Astakula","url":"https://astakula.com/"},
+        {"@type":"Person","@id":"https://tools.astakula.com/#ariyo-ardiwardana","name":"Ariyo Ardiwardana","affiliation":{"@id":"https://astakula.com/#organization"}},
+        {"@type":"WebApplication","@id":"https://tools.astakula.com/color/#app","name":"Color Palette Generator","url":"https://tools.astakula.com/color/","description":"Browser-based color palette extraction, OKLCH harmony generation, tonal-scale generation, and WCAG contrast checking.","applicationCategory":"DesignApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript and a modern web browser","isAccessibleForFree":true,"creator":{"@id":"https://tools.astakula.com/#ariyo-ardiwardana"},"publisher":{"@id":"https://astakula.com/#organization"}}
+      ]
+    }
+    </script>
+    <script src="../assets/js/theme.js?v=5"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sprtn/ui@1.3.2/dist/brut.css">
+    <link rel="stylesheet" href="../assets/css/astakula.css?v=3">
+    <link rel="stylesheet" href="./style.css?v=1">
+</head>
+<body>
+<div class="page-shell">
+    <header class="site-header">
+        <div class="site-header-inner">
+            <a href="../" class="brand" aria-label="Astakula Tools Home">Astakula Tools</a>
+            <div class="header-actions">
+                <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch color theme">Dark</button>
+                <span class="header-badge">Color Palette</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <section class="hero-section">
+            <div class="hero-copy">
+                <p class="eyebrow">COLOR PALETTE GENERATOR</p>
+                <h1>Build palettes with rules, not guesses.</h1>
+                <p class="hero-description">Extract representative colors from an image or start from a HEX value, then generate structured palette roles, tonal scales, and WCAG 2.2 contrast checks.</p>
+            </div>
+            <div class="hero-decoration" aria-hidden="true">
+                <div class="palette-mark"><span></span><span></span><span></span><span></span></div>
+            </div>
+        </section>
+
+        <section class="workspace-section" aria-labelledby="source-heading">
+            <div class="section-heading">
+                <div><p class="section-number">01</p><h2 id="source-heading">Choose a source</h2></div>
+                <p>Image analysis and palette generation run locally in your browser. No image upload is required.</p>
+            </div>
+
+            <div class="source-grid">
+                <article class="tool-panel source-panel">
+                    <div class="panel-heading">
+                        <div><p class="section-number">IMAGE</p><h2>Extract from image</h2></div>
+                        <span id="imageState" class="state-pill">Optional</span>
+                    </div>
+                    <label id="dropZone" class="drop-zone" tabindex="0">
+                        <input id="imageInput" type="file" accept="image/png,image/jpeg,image/webp,image/avif" hidden>
+                        <strong>Drop an image or choose a file</strong>
+                        <span>PNG, JPEG, WebP, or AVIF · processed locally</span>
+                    </label>
+                    <div id="imagePreviewWrap" class="image-preview-wrap hidden">
+                        <img id="imagePreview" alt="Uploaded color source preview">
+                        <div><strong id="imageName">Image</strong><span id="imageMeta">Ready</span></div>
+                    </div>
+                    <div class="form-grid form-grid-two">
+                        <label class="field-group"><span>Extracted colors</span><select id="extractCount" class="brut-select"><option>4</option><option selected>5</option><option>6</option><option>7</option><option>8</option></select></label>
+                        <label class="field-group"><span>Sampling detail</span><select id="sampleQuality" class="brut-select"><option value="fast">Fast</option><option value="balanced" selected>Balanced</option><option value="fine">Fine</option></select></label>
+                    </div>
+                    <div class="panel-actions"><button id="extractButton" class="brut-btn brut-btn--primary" type="button" disabled>Extract colors</button><button id="clearImageButton" class="brut-btn" type="button" disabled>Clear image</button></div>
+                </article>
+
+                <article class="tool-panel source-panel">
+                    <div class="panel-heading">
+                        <div><p class="section-number">COLOR</p><h2>Start from a color</h2></div>
+                        <span class="state-pill">Direct</span>
+                    </div>
+                    <p class="panel-copy">Use an existing brand color when you do not need image extraction.</p>
+                    <div class="manual-color-row">
+                        <input id="manualColor" class="color-picker" type="color" value="#64145c" aria-label="Choose base color">
+                        <label class="field-group"><span>HEX</span><input id="manualHex" class="brut-input mono-input" type="text" value="#64145C" maxlength="7" spellcheck="false"></label>
+                    </div>
+                    <div class="panel-actions"><button id="useColorButton" class="brut-btn brut-btn--primary" type="button">Use as base color</button><button id="randomBaseButton" class="brut-btn" type="button">Random example</button></div>
+                    <div class="standard-note"><strong>Generation model</strong><span>Palette relationships are calculated in OKLCH. Output is gamut-mapped back into sRGB for browser-safe HEX values.</span></div>
+                </article>
+            </div>
+
+            <div id="statusBox" class="status-box is-neutral" role="status" aria-live="polite">Choose an image or enter a base color to begin.</div>
+        </section>
+
+        <section id="candidateSection" class="workspace-section hidden" aria-labelledby="candidate-heading">
+            <div class="section-heading">
+                <div><p class="section-number">02</p><h2 id="candidate-heading">Extracted candidates</h2></div>
+                <p>Colors that are perceptually too similar are consolidated before the final candidates are shown.</p>
+            </div>
+            <div id="candidateGrid" class="candidate-grid"></div>
+        </section>
+
+        <section id="generatorSection" class="workspace-section" aria-labelledby="generator-heading">
+            <div class="section-heading">
+                <div><p class="section-number">03</p><h2 id="generator-heading">Build the palette</h2></div>
+                <p>Harmony modes define hue relationships. UI System also assigns practical interface roles and accessible neutral colors.</p>
+            </div>
+
+            <div class="mode-tabs" role="tablist" aria-label="Palette generation modes">
+                <button class="mode-tab is-active" type="button" data-mode="brand">Brand</button>
+                <button class="mode-tab" type="button" data-mode="ui">UI System</button>
+                <button class="mode-tab" type="button" data-mode="monochromatic">Monochromatic</button>
+                <button class="mode-tab" type="button" data-mode="analogous">Analogous</button>
+                <button class="mode-tab" type="button" data-mode="complementary">Complementary</button>
+                <button class="mode-tab" type="button" data-mode="split">Split Complementary</button>
+                <button class="mode-tab" type="button" data-mode="triadic">Triadic</button>
+                <button class="mode-tab" type="button" data-mode="extracted">Extracted</button>
+            </div>
+
+            <article class="tool-panel palette-panel">
+                <div class="palette-toolbar">
+                    <div>
+                        <p class="section-number">BASE COLOR</p>
+                        <div class="base-color-line"><span id="baseSwatch" class="base-swatch"></span><strong id="baseHex">#64145C</strong><span id="baseOklch">oklch(...)</span></div>
+                    </div>
+                    <div class="panel-actions compact-actions"><button id="copyCssButton" class="brut-btn brut-btn--sm" type="button">Copy CSS</button><button id="downloadJsonButton" class="brut-btn brut-btn--sm" type="button">JSON</button><button id="downloadPngButton" class="brut-btn brut-btn--sm" type="button">PNG swatch</button></div>
+                </div>
+                <div id="paletteGrid" class="palette-grid"></div>
+            </article>
+        </section>
+
+        <section class="workspace-section" aria-labelledby="scale-heading">
+            <div class="section-heading">
+                <div><p class="section-number">04</p><h2 id="scale-heading">Tonal scale</h2></div>
+                <p>Lightness is stepped in OKLCH while chroma is reduced where needed to stay inside the sRGB gamut.</p>
+            </div>
+            <article class="tool-panel"><div id="tonalScale" class="tonal-scale"></div></article>
+        </section>
+
+        <section class="workspace-section" aria-labelledby="quality-heading">
+            <div class="section-heading">
+                <div><p class="section-number">05</p><h2 id="quality-heading">Quality & accessibility</h2></div>
+                <p>Contrast follows WCAG 2.2 thresholds. Quality scores are transparent heuristics, not design certification.</p>
+            </div>
+            <div class="quality-grid">
+                <article class="tool-panel">
+                    <div class="panel-heading"><div><p class="section-number">QUALITY REPORT</p><h2>Palette signals</h2></div></div>
+                    <div id="scoreGrid" class="score-grid"></div>
+                    <p class="score-disclaimer">Scores summarize distinctness, tested text contrast, hue distribution, and neutral support. A high score does not guarantee brand suitability.</p>
+                </article>
+                <article class="tool-panel">
+                    <div class="panel-heading"><div><p class="section-number">WCAG 2.2</p><h2>Contrast matrix</h2></div></div>
+                    <div id="contrastList" class="contrast-list"></div>
+                </article>
+            </div>
+        </section>
+
+        <section class="workspace-section" aria-labelledby="preview-heading">
+            <div class="section-heading">
+                <div><p class="section-number">06</p><h2 id="preview-heading">Interface preview</h2></div>
+                <p>Preview the assigned roles in light and dark surfaces. This is a usage simulation, not a full component library.</p>
+            </div>
+            <div class="preview-grid">
+                <article id="lightPreview" class="ui-preview"></article>
+                <article id="darkPreview" class="ui-preview"></article>
+            </div>
+        </section>
+
+        <section class="info-section" aria-label="Color methodology">
+            <article class="info-card"><span class="info-number">01</span><h3>Perceptual color space</h3><p>OKLCH is used for hue relationships and tonal changes because its lightness, hue, and chroma behavior is more perceptually uniform than traditional HSL adjustments.</p></article>
+            <article class="info-card"><span class="info-number">02</span><h3>Contrast is measured</h3><p>Normal text targets 4.5:1 for WCAG AA, large text targets 3:1, and 7:1 is reported as the enhanced AAA threshold for normal text.</p></article>
+            <article class="info-card"><span class="info-number">03</span><h3>Harmony is a suggestion</h3><p>Complementary, analogous, split-complementary, and triadic modes describe structured hue relationships. They do not certify that a palette fits a specific brand.</p></article>
+        </section>
+    </main>
+
+    <footer class="site-footer"><div class="site-footer-inner"><p>Astakula Tools</p><p>astakula.com</p><nav class="ta-footer-links" data-footer-links="true" aria-label="Legal and site links"><a href="../">Tools</a><a href="../privacy/">Privacy Policy</a><a href="../terms/">Terms of Service</a><a href="https://astakula.com/" target="_blank" rel="noopener noreferrer">Astakula</a></nav></div></footer>
+</div>
+<script src="./app.js?v=1"></script>
+</body>
+</html>
