@@ -25,6 +25,6 @@ test("extended tools are wired after the legacy adapter", () => {
   for (const mode of ["split","remove","images","pdfpng","watermark","numbers"]) {
     assert.ok(extended.includes('byId("' + mode + 'Button")'), "missing action listener: " + mode);
   }
-  assert.ok(html.includes("pdfjs-dist@3.11.174"));
+  assert.ok(extended.includes("pdfjs-dist@4.10.38"));
   assert.ok(html.includes("jszip@3.10.1"));
 });

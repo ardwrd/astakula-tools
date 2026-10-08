@@ -16,8 +16,8 @@ const vendor = [
   [/\/@sprtn\/ui@.*\/dist\/brut\.css/, null, "text/css"],
   [/\/pdf-lib@.*\/dist\/pdf-lib\.min\.js/, "pdf-lib/dist/pdf-lib.min.js", "text/javascript"],
   [/\/jszip@.*\/dist\/jszip\.min\.js/, "jszip/dist/jszip.min.js", "text/javascript"],
-  [/\/pdfjs-dist@.*\/build\/pdf\.min\.js/, "pdfjs-dist/build/pdf.min.js", "text/javascript"],
-  [/\/pdfjs-dist@.*\/build\/pdf\.worker\.min\.js/, "pdfjs-dist/build/pdf.worker.min.js", "text/javascript"]
+  [/\/pdfjs-dist@.*\/build\/pdf\.min\.mjs/, "pdfjs-dist/build/pdf.min.mjs", "text/javascript"],
+  [/\/pdfjs-dist@.*\/build\/pdf\.worker\.min\.mjs/, "pdfjs-dist/build/pdf.worker.min.mjs", "text/javascript"]
 ];
 let server, browser, address;
 
@@ -72,7 +72,7 @@ async function launchPage() {
     await route.fulfill({status:200,contentType:selected[2],body:bytes});
   });
   await page.goto(address+"/pdf/",{waitUntil:"load"});
-  await page.waitForFunction(() => !!window.AstakulaPDF && !!window.pdfjsLib && !!window.JSZip);
+  await page.waitForFunction(() => !!window.AstakulaPDF && !!window.JSZip && document.documentElement.dataset.pdfToolsReady === "true");
   return {page,errors};
 }
 

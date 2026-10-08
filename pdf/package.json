@@ -10,7 +10,7 @@
   "devDependencies": {
     "pdf-lib": "1.17.1",
     "jszip": "3.10.1",
-    "pdfjs-dist": "3.11.174",
+    "pdfjs-dist": "4.10.38",
     "playwright": "^1.55.0"
   }
 }

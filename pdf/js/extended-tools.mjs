@@ -1,3 +1,4 @@
+import * as pdfjsLib from "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.min.mjs";
 import { removePages, splitPages, imagesToPdf, addWatermark, addPageNumbers }
   from "./pdf-operations.mjs";
 
@@ -134,10 +135,10 @@ async function canvasToPng(canvas) {
 byId("pdfpngButton").addEventListener("click", () => run("pdfpng", "Rendering PDF pages…", async () => {
   const { file, bytes } = await bytesFor("pdfpng");
   if (file.size > 20 * 1024 * 1024) throw new Error("PDF to PNG supports files up to 20 MB.");
-  if (!window.pdfjsLib || !window.JSZip) throw new Error("Rendering library unavailable. Refresh and retry.");
-  const pdfjs = window.pdfjsLib;
-  pdfjs.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js";
-  const loading = pdfjs.getDocument({ data: new Uint8Array(bytes) });
+  if (!window.JSZip) throw new Error("ZIP library unavailable. Refresh and retry.");
+  const pdfjs = pdfjsLib;
+  pdfjs.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.worker.min.mjs";
+  const loading = pdfjs.getDocument({ data: new Uint8Array(bytes), isEvalSupported: false });
   let documentPdf;
   try {
     documentPdf = await loading.promise;
@@ -203,3 +204,5 @@ document.querySelectorAll("[data-tool-select]").forEach(button => button.addEven
   byId("workspace").scrollIntoView({ behavior: "smooth", block: "start" });
 }));
 updateCatalog();
+
+document.documentElement.dataset.pdfToolsReady = "true";
