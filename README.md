@@ -24,7 +24,7 @@ Most tools process user input directly in the browser. No Astakula application b
 | Social Media Tools | `/social/` | Carousel splitting, profile-grid preview, and social-media safe-zone guides |
 | Work Schedule Generator | `/schedule/` | Build monthly staff schedules, record requested days off, validate assignments, and export Excel |
 | Bulk Certificate Generator | `/certificate/` | Merge a finished certificate design with spreadsheet participant data and generate certificates in bulk |
-| Color Palette Generator | `/color/` | Extract representative colors, build structured OKLCH palettes, generate tonal scales, and check WCAG contrast |
+| Color Palette Generator | `/color/` | Generate interactive OKLCH-based palettes, lock/reorder colors, extract from images, and inspect color systems |
 
 ## Tool details
 
@@ -82,6 +82,11 @@ The Color Palette Generator uses a fast, interactive palette-board workflow whil
 - exports a HEX list, CSS variables, JSON, and a PNG palette sheet.
 
 The interactive workflow is designed for rapid exploration, but harmony labels and quality signals remain suggestions rather than claims that a palette is objectively suitable for a brand. All image analysis and palette generation runs in the browser; source images are not uploaded to an Astakula application backend.
+
+#### Contrast Checker
+Route: `/color/contrast/`
+
+The first standalone Color Tools companion checks foreground/background pairs against WCAG 2.2 thresholds, includes normal/large text and non-text UI results, previews the selected pair, accepts shareable `?fg=` and `?bg=` parameters, and can suggest a nearby foreground color that reaches the 4.5:1 AA normal-text target.
 
 ## Privacy and data flow
 
@@ -147,7 +152,11 @@ astakula-tools/
 ├── color/
 │   ├── index.html
 │   ├── style.css
-│   └── app.js
+│   ├── app.js
+│   └── contrast/
+│       ├── index.html
+│       ├── style.css
+│       └── app.js
 ├── privacy/
 ├── terms/
 ├── 404.html

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Check foreground and background color contrast against WCAG 2.2 AA and AAA thresholds, preview text, and find accessible alternatives in your browser.">
+    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+    <meta name="author" content="Ariyo Ardiwardana">
+    <meta name="theme-color" content="#f3f0e8">
+    <link rel="canonical" href="https://tools.astakula.com/color/contrast/">
+    <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Contrast Checker — Astakula Tools">
+    <meta property="og:description" content="Measure color contrast, check WCAG 2.2 thresholds, preview text, and find accessible foreground alternatives.">
+    <meta property="og:url" content="https://tools.astakula.com/color/contrast/">
+    <meta property="og:site_name" content="Astakula Tools">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Contrast Checker — Astakula Tools">
+    <meta name="twitter:description" content="Browser-based WCAG 2.2 color contrast checker.">
+    <title>Contrast Checker — Astakula Tools</title>
+    <script type="application/ld+json">
+    {
+      "@context":"https://schema.org",
+      "@graph":[
+        {"@type":"Organization","@id":"https://astakula.com/#organization","name":"Astakula","url":"https://astakula.com/"},
+        {"@type":"Person","@id":"https://tools.astakula.com/#ariyo-ardiwardana","name":"Ariyo Ardiwardana","affiliation":{"@id":"https://astakula.com/#organization"}},
+        {"@type":"WebApplication","@id":"https://tools.astakula.com/color/contrast/#app","name":"Contrast Checker","url":"https://tools.astakula.com/color/contrast/","description":"Browser-based foreground and background contrast checker for WCAG 2.2 AA and AAA thresholds.","applicationCategory":"DesignApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript and a modern web browser","isAccessibleForFree":true,"creator":{"@id":"https://tools.astakula.com/#ariyo-ardiwardana"},"publisher":{"@id":"https://astakula.com/#organization"}}
+      ]
+    }
+    </script>
+    <script src="../../assets/js/theme.js?v=5"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sprtn/ui@1.3.2/dist/brut.css">
+    <link rel="stylesheet" href="../../assets/css/astakula.css?v=3">
+    <link rel="stylesheet" href="./style.css?v=1">
+</head>
+<body>
+<div class="page-shell">
+    <header class="site-header">
+        <div class="site-header-inner">
+            <a href="../../" class="brand" aria-label="Astakula Tools Home">Astakula Tools</a>
+            <div class="header-actions">
+                <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch color theme">Dark</button>
+                <span class="header-badge">Contrast</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <section class="hero-section">
+            <div class="hero-copy">
+                <p class="eyebrow">COLOR TOOLS · CONTRAST</p>
+                <h1>Measure contrast before you ship it.</h1>
+                <p class="hero-description">Compare foreground and background colors, review WCAG 2.2 text thresholds, preview real usage, and generate a nearby accessible foreground when the current pair fails.</p>
+            </div>
+            <div class="hero-decoration" aria-hidden="true"><div class="contrast-mark">Aa</div></div>
+        </section>
+
+        <section class="workspace-section" aria-labelledby="checker-heading">
+            <div class="section-heading">
+                <div><p class="section-number">01</p><h2 id="checker-heading">Contrast checker</h2></div>
+                <p>Normal text AA requires 4.5:1. Large text AA and non-text UI contrast use 3:1. AAA normal text requires 7:1.</p>
+            </div>
+
+            <div class="checker-layout">
+                <article class="tool-panel controls-panel">
+                    <div class="panel-heading">
+                        <div><p class="section-number">COLORS</p><h2>Choose the pair</h2></div>
+                        <button id="swapButton" class="brut-btn brut-btn--sm" type="button">Swap ↕</button>
+                    </div>
+
+                    <div class="color-field">
+                        <div class="color-field-head"><strong>Foreground</strong><span>Text / icon</span></div>
+                        <div class="color-input-row">
+                            <input id="foregroundPicker" class="color-picker" type="color" value="#111318" aria-label="Foreground color">
+                            <input id="foregroundHex" class="brut-input mono-input" type="text" value="#111318" maxlength="7" spellcheck="false" aria-label="Foreground HEX">
+                            <button id="copyForeground" class="brut-btn brut-btn--sm" type="button">Copy</button>
+                        </div>
+                    </div>
+
+                    <div class="color-field">
+                        <div class="color-field-head"><strong>Background</strong><span>Surface</span></div>
+                        <div class="color-input-row">
+                            <input id="backgroundPicker" class="color-picker" type="color" value="#FFFFFF" aria-label="Background color">
+                            <input id="backgroundHex" class="brut-input mono-input" type="text" value="#FFFFFF" maxlength="7" spellcheck="false" aria-label="Background HEX">
+                            <button id="copyBackground" class="brut-btn brut-btn--sm" type="button">Copy</button>
+                        </div>
+                    </div>
+
+                    <div class="preset-section">
+                        <strong>Quick examples</strong>
+                        <div class="preset-grid">
+                            <button type="button" data-fg="#111318" data-bg="#FFFFFF">Black / White</button>
+                            <button type="button" data-fg="#FFFFFF" data-bg="#64145C">White / Plum</button>
+                            <button type="button" data-fg="#111318" data-bg="#F5C842">Ink / Yellow</button>
+                            <button type="button" data-fg="#FFFFFF" data-bg="#3157A4">White / Blue</button>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="tool-panel result-panel">
+                    <div class="ratio-block">
+                        <p class="section-number">CONTRAST RATIO</p>
+                        <strong id="ratioValue">21.00 : 1</strong>
+                        <span id="ratioSummary">Maximum contrast</span>
+                    </div>
+
+                    <div id="complianceGrid" class="compliance-grid"></div>
+
+                    <div id="suggestionBox" class="suggestion-box hidden">
+                        <div>
+                            <strong>Nearest AA foreground suggestion</strong>
+                            <span id="suggestionText">—</span>
+                        </div>
+                        <div class="suggestion-actions">
+                            <span id="suggestionSwatch" class="suggestion-swatch"></span>
+                            <button id="applySuggestionButton" class="brut-btn brut-btn--sm" type="button">Apply</button>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="workspace-section" aria-labelledby="preview-heading">
+            <div class="section-heading">
+                <div><p class="section-number">02</p><h2 id="preview-heading">Usage preview</h2></div>
+                <p>Contrast thresholds depend on text size and purpose. A passing ratio does not replace readable typography, spacing, or non-color cues.</p>
+            </div>
+            <div id="previewCanvas" class="preview-canvas">
+                <div class="preview-copy">
+                    <span class="preview-kicker">INTERFACE PREVIEW</span>
+                    <h2>The quick brown fox jumps over the lazy dog.</h2>
+                    <p>This paragraph represents normal body text. It should meet at least WCAG AA 4.5:1 when used at ordinary text sizes.</p>
+                    <div class="preview-actions">
+                        <button type="button">Primary action</button>
+                        <span class="preview-icon" aria-hidden="true">●</span>
+                        <span>UI component / graphical object sample</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="workspace-section" aria-labelledby="details-heading">
+            <div class="section-heading">
+                <div><p class="section-number">03</p><h2 id="details-heading">Color details</h2></div>
+                <p>Use the numerical values to document the pair or carry it back into the palette generator.</p>
+            </div>
+            <div class="detail-grid">
+                <article class="detail-card"><span>Foreground RGB</span><strong id="foregroundRgb">—</strong></article>
+                <article class="detail-card"><span>Background RGB</span><strong id="backgroundRgb">—</strong></article>
+                <article class="detail-card"><span>Foreground luminance</span><strong id="foregroundLum">—</strong></article>
+                <article class="detail-card"><span>Background luminance</span><strong id="backgroundLum">—</strong></article>
+            </div>
+            <div class="tool-links">
+                <a class="brut-btn brut-btn--primary" href="../">Back to Palette Generator</a>
+            </div>
+        </section>
+
+        <section class="info-section" aria-label="Contrast guidance">
+            <article class="info-card"><span class="info-number">01</span><h3>AA normal text</h3><p>Normal text should reach at least 4.5:1 contrast against its background.</p></article>
+            <article class="info-card"><span class="info-number">02</span><h3>Large & non-text</h3><p>Large text uses a 3:1 AA threshold. UI components and meaningful graphics also commonly target 3:1 against adjacent colors.</p></article>
+            <article class="info-card"><span class="info-number">03</span><h3>AAA is stricter</h3><p>Enhanced contrast for normal text uses 7:1, while large text AAA uses 4.5:1.</p></article>
+        </section>
+    </main>
+
+    <footer class="site-footer"><div class="site-footer-inner"><p>Astakula Tools</p><p>astakula.com</p><nav class="ta-footer-links" data-footer-links="true" aria-label="Legal and site links"><a href="../../">Tools</a><a href="../../privacy/">Privacy Policy</a><a href="../../terms/">Terms of Service</a><a href="https://astakula.com/" target="_blank" rel="noopener noreferrer">Astakula</a></nav></div></footer>
+</div>
+<script src="./app.js?v=1"></script>
+</body>
+</html>
