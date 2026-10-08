@@ -116,6 +116,8 @@ test("tool cards, dark mode, filtering and privacy are functional", async () => 
     assert.equal(await page.locator('#mergePanel').isVisible(),false);
     await page.locator('[data-theme-toggle]').first().click();
     assert.equal(await page.locator("html").getAttribute("data-theme"),"dark");
+    const foreground = await page.locator('[data-tool-select="merge"]').evaluate(el => getComputedStyle(el).color);
+    assert.equal(foreground, "rgb(245, 241, 233)", "unselected cards must have light text in dark mode");
     await mkdir(path.join(pdfDir,"artifacts"),{recursive:true});
     await page.screenshot({path:path.join(pdfDir,"artifacts","toolhub-desktop.png"),fullPage:true});
     assert.deepEqual(errors,[]);

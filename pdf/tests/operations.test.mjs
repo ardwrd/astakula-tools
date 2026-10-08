@@ -31,3 +31,8 @@ test("watermark and page numbers create valid PDFs",async()=>{
 test("reject non-images",async()=>{
   await assert.rejects(imagesToPdf(lib,[{bytes:new Uint8Array([1,2,3])}]),/PNG and JPEG/);
 });
+
+test("image conversion enforces aggregate memory limit",async()=>{
+  const image=new Uint8Array(13*1024*1024);
+  await assert.rejects(imagesToPdf(lib,Array.from({length:5},()=>({bytes:image}))),/60 MB/);
+});
