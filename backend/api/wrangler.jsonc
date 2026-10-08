@@ -1,19 +1,13 @@
 {
-  // Staging only. Replace D1 ID and provision resources before deployment.
-  "name": "astakula-pdf-api-staging",
-  "main": "src/index.ts",
+  // Free-tier Worker: no Containers, paid services, databases, queues, or storage.
+  // This Worker only returns metadata. PDF bytes stay on the user's device.
+  "name": "astakula-pdf-api-free-staging",
+  "main": "src/index.mjs",
   "compatibility_date": "2026-10-08",
   "workers_dev": true,
-  "vars": {"ENVIRONMENT":"staging","MAX_UPLOAD_BYTES":"20971520"},
-  "observability": {"enabled":true},
-  "d1_databases": [{"binding":"DB","database_name":"astakula-pdf-jobs-staging","database_id":"REPLACE_WITH_D1_DATABASE_ID","migrations_dir":"migrations"}],
-  "r2_buckets": [{"binding":"FILES","bucket_name":"astakula-pdf-temp-staging"}],
-  "queues": {
-    "producers": [{"binding":"PDF_JOBS","queue":"astakula-pdf-jobs-staging"}],
-    "consumers": [{"queue":"astakula-pdf-jobs-staging","max_batch_size":1,"max_retries":3,"dead_letter_queue":"astakula-pdf-jobs-dlq-staging"}]
-  },
-  "containers":[{"class_name":"PdfProcessor","image":"../../services/pdf-processor/Dockerfile","instance_type":"basic","max_instances":1}],
-  "durable_objects":{"bindings":[{"name":"PDF_PROCESSOR","class_name":"PdfProcessor"}]},
-  "migrations":[{"tag":"v1","new_sqlite_classes":["PdfProcessor"]}],
-  "triggers":{"crons":["0 * * * *"]}
+  "observability": { "enabled": true },
+  "vars": {
+    "ENVIRONMENT": "staging",
+    "DEPLOYMENT_PLAN": "cloudflare-free"
+  }
 }

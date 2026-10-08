@@ -1,68 +1,53 @@
-# Astakula PDF Backend — WP-CF-001
+# Astakula PDF — Cloudflare Free Foundation
 
-Status: **staging foundation on feature branch, NOT deployed**. The existing GitHub Pages website remains unchanged.
+**Active plan: Cloudflare Free only.** This replaces the earlier Workers Paid / Containers prototype. No paid resources, migration, production DNS changes, or document storage have been configured.
 
-## Scope delivered
+## What runs where
 
-- Cloudflare Workers + Hono REST API, backed by D1 job state and private R2 storage.
-- Cloudflare Queues consumer dispatching work to a Cloudflare Container.
-- PDF processing engine in Python with pypdf. Only **Rotate PDF** is implemented for the first end-to-end slice.
-- Capability tokens stored as SHA-256 hashes, one-hour job expiration, scheduled file cleanup.
-- GitHub Actions typechecking and Python PDF unit tests.
+- Website: existing GitHub Pages until a future, tested Cloudflare Pages migration.
+- API: lightweight **Cloudflare Workers Free** service. It reports availability, processing mode, and the catalog of implemented PDF tools.
+- PDF processing: **on the user's own device**, in the existing /pdf/ JavaScript application using pdf-lib.
+- No PDF upload, server job queue, user file persistence, external converter service, or Docker Container is used in this Free edition.
+- D1 and Cloudflare Queues also have Free tiers, but are not provisioned: there is no meaningful workload requiring them yet.
+- R2 has a free allowance but requires activation on the connected account and can incur charges beyond its allowance. It is deliberately **not enabled**.
 
-Do not represent Compress, OCR, Repair, Office conversion, or AI features as implemented.
+## Free tier API routes
 
-## Staging API
-
-Every endpoint except health requires the X-Staging-Key header, matching the STAGING_API_KEY Worker secret.
-Requests for a specific job additionally require Authorization: Bearer JOB_TOKEN.
-
-| Method | Route | Request / effect |
+| Method | Route | Result |
 | --- | --- | --- |
-| GET | /api/v1/health | API liveness only |
-| POST | /api/v1/jobs | JSON {"operation":"rotate","params":{"angle":90}}. Returns id/token/expiry |
-| PUT | /api/v1/jobs/:id/input | Raw PDF binary (application/pdf, Content-Length, <=20MiB) |
-| POST | /api/v1/jobs/:id/run | Queues PDF rotation |
-| GET | /api/v1/jobs/:id | Poll job status |
-| GET | /api/v1/jobs/:id/download | Download completed PDF |
-| DELETE | /api/v1/jobs/:id | Marks deleted and deletes private R2 files |
+| GET | /api/v1/health | API liveness, Free plan |
+| GET | /api/v1/config | Browser processing and privacy guarantees |
+| GET | /api/v1/pdf/tools | Only currently working browser PDF tools |
 
-The capability token is returned only at job creation and must never be placed in a URL. The processing engine is reachable through its Worker binding, not a public container hostname. Worker-mediated uploads deliberately cap input size for now.
+All other paths return 404. Document upload POSTs deliberately do not exist.
 
-## Cloudflare prerequisites (currently blocked)
+## Local tests
 
-1. Enable R2 in the Cloudflare Dashboard.
-2. Confirm Workers Paid availability for Cloudflare Containers.
-3. Provision private R2 bucket: astakula-pdf-temp-staging.
-4. Provision D1 database: astakula-pdf-jobs-staging.
-5. Replace REPLACE_WITH_D1_DATABASE_ID inside api/wrangler.jsonc.
-6. Create Queues: astakula-pdf-jobs-staging and astakula-pdf-jobs-dlq-staging.
-7. Apply D1 migrations with Wrangler before the first API call.
-8. Add Worker secret STAGING_API_KEY (never commit actual secret).
-9. Deploy staging Worker only; test health, create, upload, process, download and delete.
-10. Configure WAF, anti-abuse, billing alerts, object lifecycle, retention and container safety settings before production.
-
-Existing tools.astakula.com DNS must **not** be changed during staging.
-
-## Local validation
-
-~~~bash
+~~~sh
 cd backend/api
 npm install
-npm run typecheck
-
-cd ../../services/pdf-processor
-python -m pip install -r requirements.txt
-python -m unittest discover -s tests -v
+npm run check
+npm test
+npm run deploy:dry-run
 ~~~
 
-## Security considerations
+## Deployment
 
-- Staging is fail-closed for API traffic until STAGING_API_KEY exists.
-- User uploads are limited to 20 MiB and must start with a PDF file signature. The engine parses and validates PDF structure.
-- PDF documents, file names and bearer tokens must not be written to analytics/logs.
-- Tokens are high-entropy random values; D1 holds only hashes.
-- Jobs expire after 1 hour; hourly cleanup is **best effort**, not a guarantee of immediate erasure. Deletion and in-flight work need race tests before production.
-- Queues can retry deliveries; processing uses status guards. Stress/race testing and a reconciler for stuck jobs are still required.
-- No public release until rate limits, abuse prevention, durable failure handling, and resource budgets are verified.
-- This foundation intentionally leaves the legacy frontend untouched and does not enable a public upload UI.
+Only stage the Free Worker initially:
+
+~~~sh
+cd backend/api
+npx wrangler login
+npm run deploy:staging
+~~~
+
+The staging Worker can be tested through its default workers.dev URL. Do not connect tools.astakula.com to the Worker: existing DNS still points to GitHub Pages.
+
+## Engineering decisions
+
+1. **Never pretend Workers Free can execute LibreOffice or Ghostscript.** Its CPU limit is 10 ms per invocation.
+2. Expand /pdf/ incrementally with browser-based pdf-lib and PDF.js. Split, image-to-PDF, PDF-to-image, watermark, page numbers, etc. can be implemented without a backend.
+3. Defer high-fidelity Office conversion, OCR-heavy jobs, digital signing PKI and advanced compression until a viable no-cost runtime has been demonstrated; do not claim feature parity before then.
+4. Keep file data in browser memory (no automatic uploads).
+5. A future free Cloudflare Pages deployment can host the current static UI without moving off Cloudflare Free.
+6. No Cloudflare service should be upgraded, enabled with billable usage, or exposed at the production domain without separately confirming a secure and tested implementation.
