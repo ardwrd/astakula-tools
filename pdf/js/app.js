@@ -50,12 +50,22 @@ let mergeFiles = [];
 let singleFiles = {
     extract: null,
     reorder: null,
-    rotate: null
+    rotate: null,
+    split: null,
+    remove: null,
+    watermark: null,
+    numbers: null,
+    pdfpng: null
 };
 let pageCounts = {
     extract: 0,
     reorder: 0,
-    rotate: 0
+    rotate: 0,
+    split: 0,
+    remove: 0,
+    watermark: 0,
+    numbers: 0,
+    pdfpng: 0
 };
 let result = null;
 
@@ -94,18 +104,20 @@ function clearResult() {
     elements.resultFilename.textContent = "output.pdf";
     elements.resultSize.textContent = "0 B";
     elements.resultMeta.textContent = "Ready";
+    elements.downloadButton.textContent = "Download PDF";
 }
 
-function setResult(bytes, filename, label) {
+function setResult(bytes, filename, label, contentType = "application/pdf") {
     clearResult();
 
-    const blob = new Blob([bytes], { type: "application/pdf" });
+    const blob = new Blob([bytes], { type: contentType });
     const url = URL.createObjectURL(blob);
 
     result = { blob, url, filename };
     elements.resultFilename.textContent = filename;
     elements.resultSize.textContent = formatBytes(blob.size);
     elements.resultMeta.textContent = label;
+    elements.downloadButton.textContent = filename.toLowerCase().endsWith(".zip") ? "Download ZIP" : "Download PDF";
     elements.resultPanel.classList.remove("hidden");
     elements.resultPanel.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
@@ -549,6 +561,7 @@ document.addEventListener("paste", (event) => {
 
     event.preventDefault();
     const zone = activeMode === "merge" ? elements.mergeDropZone : elements[`${activeMode}DropZone`];
+    if (!zone) return;
     zone.classList.add("is-pasting");
     window.setTimeout(() => zone.classList.remove("is-pasting"), 350);
 
@@ -563,5 +576,19 @@ window.addEventListener("beforeunload", () => {
     if (result?.url) URL.revokeObjectURL(result.url);
 });
 
+// Expose a small adapter so independent browser tools reuse existing UI,
+// file validation, download lifecycle, and status management.
+for (const mode of ["split", "remove", "watermark", "numbers", "pdfpng"]) {
+    for (const suffix of ["Input", "DropZone", "Meta"]) {
+        elements[mode + suffix] = document.getElementById(mode + suffix);
+    }
+}
+window.AstakulaPDF = {
+    selectMode, setStatus, setResult, clearResult, loadPdf, formatBytes, baseName,
+    inspectSingleFile, handleSingleFiles, clearSingle, setupDropZone,
+    getFile: (mode) => singleFiles[mode],
+    getPageCount: (mode) => pageCounts[mode],
+    getActiveMode: () => activeMode
+};
 renderMergeQueue();
 selectMode("merge");
