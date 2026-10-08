@@ -5,10 +5,16 @@ on:
       - feature/cloudflare-foundation
     paths:
       - "backend/**"
+      - "pdf/**"
+      - "assets/js/theme.js"
+      - "sitemap.xml"
       - ".github/workflows/cloudflare-foundation-ci.yml"
   pull_request:
     paths:
       - "backend/**"
+      - "pdf/**"
+      - "assets/js/theme.js"
+      - "sitemap.xml"
       - ".github/workflows/cloudflare-foundation-ci.yml"
 
 jobs:
@@ -26,3 +32,18 @@ jobs:
       - run: npm run check
       - run: npm test
       - run: npm run deploy:dry-run
+
+  pdf-browser:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: pdf
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm install --no-audit --no-fund
+      - run: npm test
+      - run: node --check js/extended-tools.mjs
+      - run: node --check js/app.js
