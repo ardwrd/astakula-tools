@@ -6,10 +6,16 @@
  * existing /pdf/ browser application. All PDF bytes remain client-side.
  */
 export const toolCatalog = Object.freeze([
-  { id: "merge", name: "Merge PDF", available: true, processing: "browser", path: "/pdf/" },
-  { id: "extract", name: "Extract PDF Pages", available: true, processing: "browser", path: "/pdf/" },
-  { id: "reorder", name: "Reorder PDF Pages", available: true, processing: "browser", path: "/pdf/" },
-  { id: "rotate", name: "Rotate PDF", available: true, processing: "browser", path: "/pdf/" }
+  { id: "merge", name: "Merge PDFs", available: true, processing: "browser", category: "organize", path: "/pdf/" },
+  { id: "split", name: "Split PDF", available: true, processing: "browser", category: "organize", path: "/pdf/" },
+  { id: "extract", name: "Extract pages", available: true, processing: "browser", category: "organize", path: "/pdf/" },
+  { id: "remove", name: "Remove pages", available: true, processing: "browser", category: "organize", path: "/pdf/" },
+  { id: "reorder", name: "Reorder pages", available: true, processing: "browser", category: "organize", path: "/pdf/" },
+  { id: "rotate", name: "Rotate pages", available: true, processing: "browser", category: "organize", path: "/pdf/" },
+  { id: "images", name: "Images to PDF", available: true, processing: "browser", category: "convert", path: "/pdf/" },
+  { id: "pdfpng", name: "PDF to PNG", available: true, processing: "browser", category: "convert", path: "/pdf/" },
+  { id: "watermark", name: "Watermark PDF", available: true, processing: "browser", category: "edit", path: "/pdf/" },
+  { id: "numbers", name: "Page numbers", available: true, processing: "browser", category: "edit", path: "/pdf/" }
 ]);
 
 const allowedPaths = new Set(["/", "/api/v1/health", "/api/v1/config", "/api/v1/pdf/tools"]);

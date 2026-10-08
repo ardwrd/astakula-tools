@@ -17,8 +17,8 @@ test("capabilities expose only real browser features", async () => {
   const response = await req("/api/v1/pdf/tools");
   assert.equal(response.status, 200);
   const body = await response.json();
-  assert.equal(body.count, 4);
-  assert.deepEqual(body.tools.map(t => t.id), ["merge", "extract", "reorder", "rotate"]);
+  assert.equal(body.count, 10);
+  assert.deepEqual(body.tools.map(t => t.id), ["merge", "split", "extract", "remove", "reorder", "rotate", "images", "pdfpng", "watermark", "numbers"]);
   assert.ok(toolCatalog.every(t => t.processing === "browser" && t.available === true));
 });
 
