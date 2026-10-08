@@ -1,0 +1,12 @@
+{
+  "name": "@astakula/pdf-browser",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs"
+  },
+  "devDependencies": {
+    "pdf-lib": "1.17.1"
+  }
+}
