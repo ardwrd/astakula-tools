@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Convert colors between HEX, RGB, HSL, HSV, CMYK, XYZ, Oklab, and OKLCH, inspect luminance and contrast, and generate perceptual tints and shades in your browser.">
+    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+    <meta name="author" content="Ariyo Ardiwardana">
+    <meta name="theme-color" content="#f3f0e8">
+    <link rel="canonical" href="https://tools.astakula.com/color/convert/">
+    <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Color Converter & Inspector — Astakula Tools">
+    <meta property="og:description" content="Convert HEX, RGB, HSL, HSV, CMYK, XYZ, Oklab, and OKLCH with perceptual color inspection.">
+    <meta property="og:url" content="https://tools.astakula.com/color/convert/">
+    <meta property="og:site_name" content="Astakula Tools">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Color Converter & Inspector — Astakula Tools">
+    <meta name="twitter:description" content="Browser-based color conversion and inspection across common color spaces.">
+    <title>Color Converter & Inspector — Astakula Tools</title>
+    <script type="application/ld+json">
+    {
+      "@context":"https://schema.org",
+      "@graph":[
+        {"@type":"Organization","@id":"https://astakula.com/#organization","name":"Astakula","url":"https://astakula.com/"},
+        {"@type":"Person","@id":"https://tools.astakula.com/#ariyo-ardiwardana","name":"Ariyo Ardiwardana","affiliation":{"@id":"https://astakula.com/#organization"}},
+        {"@type":"WebApplication","@id":"https://tools.astakula.com/color/convert/#app","name":"Color Converter & Inspector","url":"https://tools.astakula.com/color/convert/","description":"Browser-based conversion between HEX, RGB, HSL, HSV, CMYK, XYZ D65, Oklab, and OKLCH with luminance and contrast inspection.","applicationCategory":"DesignApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript and a modern web browser","isAccessibleForFree":true,"creator":{"@id":"https://tools.astakula.com/#ariyo-ardiwardana"},"publisher":{"@id":"https://astakula.com/#organization"}}
+      ]
+    }
+    </script>
+    <script src="../../assets/js/theme.js?v=5"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sprtn/ui@1.3.2/dist/brut.css">
+    <link rel="stylesheet" href="../../assets/css/astakula.css?v=3">
+    <link rel="stylesheet" href="./style.css?v=1">
+</head>
+<body>
+<div class="page-shell">
+    <header class="site-header">
+        <div class="site-header-inner">
+            <a href="../../" class="brand" aria-label="Astakula Tools Home">Astakula Tools</a>
+            <div class="header-actions">
+                <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch color theme">Dark</button>
+                <span class="header-badge">Color Convert</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <section class="hero-section">
+            <div class="hero-copy">
+                <p class="eyebrow">COLOR TOOLS · CONVERTER</p>
+                <h1>One color. Every useful representation.</h1>
+                <p class="hero-description">Convert a color across common web and design color spaces, then inspect luminance, contrast, perceptual coordinates, and controlled tints and shades.</p>
+            </div>
+            <div class="hero-decoration" aria-hidden="true"><div class="convert-mark">#</div></div>
+        </section>
+
+        <section class="workspace-section" aria-labelledby="source-heading">
+            <div class="section-heading">
+                <div><p class="section-number">01</p><h2 id="source-heading">Choose a color</h2></div>
+                <p>Use the picker, enter a six-digit HEX value, or paste a supported CSS-style value such as rgb(), hsl(), oklab(), or oklch().</p>
+            </div>
+
+            <div class="source-layout">
+                <article class="tool-panel source-panel">
+                    <div class="source-input-row">
+                        <input id="colorPicker" class="color-picker" type="color" value="#64145c" aria-label="Choose color">
+                        <div class="source-fields">
+                            <label class="field-group"><span>HEX</span><input id="hexInput" class="brut-input mono-input" type="text" value="#64145C" maxlength="7" spellcheck="false"></label>
+                            <label class="field-group"><span>Paste color</span><input id="pasteInput" class="brut-input mono-input" type="text" placeholder="rgb(100, 20, 92) or oklch(45% 0.18 330)" spellcheck="false"></label>
+                        </div>
+                        <button id="applyPasteButton" class="brut-btn brut-btn--primary" type="button">Apply</button>
+                    </div>
+                    <div class="quick-presets">
+                        <button type="button" data-color="#64145C">Plum</button>
+                        <button type="button" data-color="#4D7CFF">Blue</button>
+                        <button type="button" data-color="#7FE3C4">Mint</button>
+                        <button type="button" data-color="#FFD23F">Yellow</button>
+                        <button type="button" data-color="#111318">Ink</button>
+                    </div>
+                    <div id="statusBox" class="status-box" role="status" aria-live="polite">Ready.</div>
+                </article>
+
+                <article id="heroSwatch" class="hero-swatch" aria-label="Selected color preview">
+                    <div class="hero-swatch-copy">
+                        <span id="heroHex">#64145C</span>
+                        <strong id="heroLabel">Selected color</strong>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="workspace-section" aria-labelledby="convert-heading">
+            <div class="section-heading">
+                <div><p class="section-number">02</p><h2 id="convert-heading">Conversions</h2></div>
+                <p>sRGB and XYZ values use the D65 white point. Oklab and OKLCH are derived from the same sRGB source color.</p>
+            </div>
+            <div id="conversionGrid" class="conversion-grid"></div>
+        </section>
+
+        <section class="workspace-section" aria-labelledby="inspect-heading">
+            <div class="section-heading">
+                <div><p class="section-number">03</p><h2 id="inspect-heading">Color inspector</h2></div>
+                <p>These measurements describe the selected color numerically. They do not determine whether the color is appropriate for a brand or interface.</p>
+            </div>
+            <div class="inspector-grid">
+                <article class="tool-panel inspector-primary">
+                    <div class="panel-heading"><div><p class="section-number">READABILITY</p><h2>Contrast behavior</h2></div></div>
+                    <div id="contrastCards" class="contrast-cards"></div>
+                    <a id="openContrastLink" class="brut-btn brut-btn--primary" href="../contrast/">Open full Contrast Checker</a>
+                </article>
+                <article class="tool-panel metric-panel">
+                    <div class="panel-heading"><div><p class="section-number">METRICS</p><h2>Color properties</h2></div></div>
+                    <div id="metricGrid" class="metric-grid"></div>
+                </article>
+            </div>
+        </section>
+
+        <section class="workspace-section" aria-labelledby="scale-heading">
+            <div class="section-heading">
+                <div><p class="section-number">04</p><h2 id="scale-heading">Perceptual tints & shades</h2></div>
+                <p>Lightness is stepped in OKLCH while hue stays stable and chroma is reduced near the gamut limits.</p>
+            </div>
+            <div id="scaleGrid" class="scale-grid"></div>
+        </section>
+
+        <section class="workspace-section" aria-labelledby="css-heading">
+            <div class="section-heading">
+                <div><p class="section-number">05</p><h2 id="css-heading">CSS output</h2></div>
+                <p>Copy the format that best matches the system you are building.</p>
+            </div>
+            <div class="css-grid">
+                <article class="code-card"><div><strong>HEX</strong><button data-copy-format="hex" class="brut-btn brut-btn--sm" type="button">Copy</button></div><code id="cssHex"></code></article>
+                <article class="code-card"><div><strong>RGB</strong><button data-copy-format="rgb" class="brut-btn brut-btn--sm" type="button">Copy</button></div><code id="cssRgb"></code></article>
+                <article class="code-card"><div><strong>HSL</strong><button data-copy-format="hsl" class="brut-btn brut-btn--sm" type="button">Copy</button></div><code id="cssHsl"></code></article>
+                <article class="code-card"><div><strong>OKLCH</strong><button data-copy-format="oklch" class="brut-btn brut-btn--sm" type="button">Copy</button></div><code id="cssOklch"></code></article>
+            </div>
+            <div class="tool-links">
+                <a class="brut-btn" href="../">Palette Generator</a>
+                <a class="brut-btn" href="../gradient/">Gradient Generator</a>
+                <a class="brut-btn" href="../contrast/">Contrast Checker</a>
+            </div>
+        </section>
+
+        <section class="info-section" aria-label="Color conversion guidance">
+            <article class="info-card"><span class="info-number">01</span><h3>RGB is device-oriented</h3><p>HEX and RGB describe the same sRGB color with different notation. They are the most direct formats for conventional web color values.</p></article>
+            <article class="info-card"><span class="info-number">02</span><h3>HSL is convenient, not perceptual</h3><p>HSL is useful for authoring but equal numerical steps do not correspond to equal perceived lightness or chroma changes.</p></article>
+            <article class="info-card"><span class="info-number">03</span><h3>OKLCH is perceptual</h3><p>OKLCH exposes lightness, chroma, and hue in a space designed to behave more uniformly for visual color adjustments.</p></article>
+        </section>
+    </main>
+
+    <footer class="site-footer"><div class="site-footer-inner"><p>Astakula Tools</p><p>astakula.com</p><nav class="ta-footer-links" data-footer-links="true" aria-label="Legal and site links"><a href="../../">Tools</a><a href="../../privacy/">Privacy Policy</a><a href="../../terms/">Terms of Service</a><a href="https://astakula.com/" target="_blank" rel="noopener noreferrer">Astakula</a></nav></div></footer>
+</div>
+<script src="./app.js?v=1"></script>
+</body>
+</html>

@@ -93,6 +93,11 @@ Route: `/color/gradient/`
 
 Builds linear, radial, and conic gradients with 2–10 editable color stops and exact stop positions. It supports sRGB or OKLCH interpolation, reverse/distribute/randomize controls, live CSS preview, shareable URL parameters, native CSS plus sampled compatibility output, and browser-side PNG export.
 
+#### Color Converter & Inspector
+Route: `/color/convert/`
+
+Converts an opaque sRGB color between HEX, RGB, HSL, HSV/HSB, arithmetic CMYK, CIE XYZ D65, Oklab, and OKLCH. It accepts HEX plus common CSS-style `rgb()`, `hsl()`, `oklab()`, and `oklch()` input, provides relative luminance and black/white contrast inspection, generates OKLCH-based tints and shades, exposes shareable `?color=` URLs, and links directly into the full Contrast Checker. CMYK output is a simple mathematical conversion rather than ICC/profile-managed print color.
+
 ## Privacy and data flow
 
 Most transformations run locally in the browser. Important exceptions or persistent browser behavior currently include:
@@ -162,7 +167,11 @@ astakula-tools/
 │   │   ├── index.html
 │   │   ├── style.css
 │   │   └── app.js
-│   └── gradient/
+│   ├── gradient/
+│   │   ├── index.html
+│   │   ├── style.css
+│   │   └── app.js
+│   └── convert/
 │       ├── index.html
 │       ├── style.css
 │       └── app.js
