@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Build linear, radial, and conic CSS gradients with editable color stops, positions, sRGB or OKLCH interpolation, live preview, and PNG export.">
+    <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1">
+    <meta name="author" content="Ariyo Ardiwardana">
+    <meta name="theme-color" content="#f3f0e8">
+    <link rel="canonical" href="https://tools.astakula.com/color/gradient/">
+    <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Gradient Generator — Astakula Tools">
+    <meta property="og:description" content="Create linear, radial, and conic gradients with precise color stops and perceptual interpolation.">
+    <meta property="og:url" content="https://tools.astakula.com/color/gradient/">
+    <meta property="og:site_name" content="Astakula Tools">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Gradient Generator — Astakula Tools">
+    <meta name="twitter:description" content="Browser-based CSS gradient builder with sRGB and OKLCH interpolation.">
+    <title>Gradient Generator — Astakula Tools</title>
+    <script type="application/ld+json">
+    {
+      "@context":"https://schema.org",
+      "@graph":[
+        {"@type":"Organization","@id":"https://astakula.com/#organization","name":"Astakula","url":"https://astakula.com/"},
+        {"@type":"Person","@id":"https://tools.astakula.com/#ariyo-ardiwardana","name":"Ariyo Ardiwardana","affiliation":{"@id":"https://astakula.com/#organization"}},
+        {"@type":"WebApplication","@id":"https://tools.astakula.com/color/gradient/#app","name":"Gradient Generator","url":"https://tools.astakula.com/color/gradient/","description":"Browser-based linear, radial, and conic gradient generator with editable stops and sRGB or OKLCH interpolation.","applicationCategory":"DesignApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript and a modern web browser","isAccessibleForFree":true,"creator":{"@id":"https://tools.astakula.com/#ariyo-ardiwardana"},"publisher":{"@id":"https://astakula.com/#organization"}}
+      ]
+    }
+    </script>
+    <script src="../../assets/js/theme.js?v=5"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sprtn/ui@1.3.2/dist/brut.css">
+    <link rel="stylesheet" href="../../assets/css/astakula.css?v=3">
+    <link rel="stylesheet" href="./style.css?v=1">
+</head>
+<body>
+<div class="page-shell">
+    <header class="site-header">
+        <div class="site-header-inner">
+            <a href="../../" class="brand" aria-label="Astakula Tools Home">Astakula Tools</a>
+            <div class="header-actions">
+                <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch color theme">Dark</button>
+                <span class="header-badge">Gradient</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <section class="hero-section">
+            <div class="hero-copy">
+                <p class="eyebrow">COLOR TOOLS · GRADIENT</p>
+                <h1>Build gradients with precise stops.</h1>
+                <p class="hero-description">Create linear, radial, and conic gradients, control every stop and position, choose sRGB or perceptual OKLCH interpolation, then copy CSS or export a PNG.</p>
+            </div>
+            <div class="hero-decoration" aria-hidden="true"><div class="gradient-mark"></div></div>
+        </section>
+
+        <section class="workspace-section" aria-labelledby="builder-heading">
+            <div class="section-heading">
+                <div><p class="section-number">01</p><h2 id="builder-heading">Gradient builder</h2></div>
+                <p>Stops are sorted by position before rendering. OKLCH interpolation follows the shortest hue path and gamut-maps sampled colors back to sRGB.</p>
+            </div>
+
+            <div class="builder-layout">
+                <article class="tool-panel control-panel">
+                    <div class="panel-heading">
+                        <div><p class="section-number">SETTINGS</p><h2>Gradient rules</h2></div>
+                    </div>
+
+                    <div class="settings-grid">
+                        <label class="field-group"><span>Type</span>
+                            <select id="gradientType" class="brut-select">
+                                <option value="linear" selected>Linear</option>
+                                <option value="radial">Radial</option>
+                                <option value="conic">Conic</option>
+                            </select>
+                        </label>
+                        <label class="field-group"><span>Interpolation</span>
+                            <select id="interpolation" class="brut-select">
+                                <option value="srgb" selected>sRGB</option>
+                                <option value="oklch">OKLCH</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <div id="linearControls" class="type-controls">
+                        <label class="field-group"><span>Angle <output id="angleOutput">90°</output></span><input id="angleRange" type="range" min="0" max="360" value="90"></label>
+                    </div>
+                    <div id="radialControls" class="type-controls hidden">
+                        <div class="settings-grid">
+                            <label class="field-group"><span>Shape</span><select id="radialShape" class="brut-select"><option value="circle">Circle</option><option value="ellipse" selected>Ellipse</option></select></label>
+                            <label class="field-group"><span>Position</span><select id="radialPosition" class="brut-select"><option value="center">Center</option><option value="top">Top</option><option value="right">Right</option><option value="bottom">Bottom</option><option value="left">Left</option><option value="top left">Top left</option><option value="top right">Top right</option><option value="bottom left">Bottom left</option><option value="bottom right">Bottom right</option></select></label>
+                        </div>
+                    </div>
+                    <div id="conicControls" class="type-controls hidden">
+                        <label class="field-group"><span>Start angle <output id="conicOutput">0°</output></span><input id="conicRange" type="range" min="0" max="360" value="0"></label>
+                    </div>
+
+                    <div class="utility-actions">
+                        <button id="reverseButton" class="brut-btn brut-btn--sm" type="button">Reverse</button>
+                        <button id="distributeButton" class="brut-btn brut-btn--sm" type="button">Distribute</button>
+                        <button id="randomizeButton" class="brut-btn brut-btn--sm" type="button">Randomize</button>
+                    </div>
+                </article>
+
+                <article class="tool-panel preview-panel">
+                    <div class="preview-header">
+                        <div><p class="section-number">LIVE PREVIEW</p><span id="previewMeta">Linear · 90° · sRGB</span></div>
+                        <button id="downloadPngButton" class="brut-btn brut-btn--sm" type="button">PNG</button>
+                    </div>
+                    <div id="gradientPreview" class="gradient-preview" aria-label="Gradient preview"></div>
+                    <div class="css-output">
+                        <code id="cssCode"></code>
+                        <button id="copyCssButton" class="brut-btn brut-btn--sm brut-btn--primary" type="button">Copy CSS</button>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="workspace-section" aria-labelledby="stops-heading">
+            <div class="section-heading">
+                <div><p class="section-number">02</p><h2 id="stops-heading">Color stops</h2></div>
+                <p>Add up to 10 stops. Each stop has an exact HEX color and a 0–100% position.</p>
+            </div>
+            <div class="stop-toolbar">
+                <button id="addStopButton" class="brut-btn brut-btn--primary" type="button">+ Add stop</button>
+                <span id="stopCount">3 stops</span>
+            </div>
+            <div id="stopList" class="stop-list"></div>
+        </section>
+
+        <section class="workspace-section" aria-labelledby="code-heading">
+            <div class="section-heading">
+                <div><p class="section-number">03</p><h2 id="code-heading">Implementation output</h2></div>
+                <p>Native CSS is generated for both sRGB and OKLCH. The fallback output uses explicit sampled stops when perceptual interpolation is selected.</p>
+            </div>
+            <div class="output-grid">
+                <article class="output-card">
+                    <div class="output-card-head"><strong>Native CSS</strong><button id="copyNativeButton" class="brut-btn brut-btn--sm" type="button">Copy</button></div>
+                    <pre id="nativeCode"></pre>
+                </article>
+                <article class="output-card">
+                    <div class="output-card-head"><strong>Compatible sampled CSS</strong><button id="copyFallbackButton" class="brut-btn brut-btn--sm" type="button">Copy</button></div>
+                    <pre id="fallbackCode"></pre>
+                </article>
+            </div>
+            <div class="tool-links">
+                <a class="brut-btn" href="../">Palette Generator</a>
+                <a class="brut-btn" href="../contrast/">Contrast Checker</a>
+            </div>
+        </section>
+
+        <section class="info-section" aria-label="Gradient guidance">
+            <article class="info-card"><span class="info-number">01</span><h3>Stop positions matter</h3><p>A gradient is not only a list of colors. Stop positions determine how much visual space each transition receives.</p></article>
+            <article class="info-card"><span class="info-number">02</span><h3>OKLCH can feel smoother</h3><p>Perceptual interpolation can reduce muddy midpoint shifts, especially when colors differ strongly in hue or lightness.</p></article>
+            <article class="info-card"><span class="info-number">03</span><h3>Check text separately</h3><p>Gradient backgrounds vary spatially, so one contrast value cannot represent the whole surface. Verify text at its actual placement.</p></article>
+        </section>
+    </main>
+
+    <footer class="site-footer"><div class="site-footer-inner"><p>Astakula Tools</p><p>astakula.com</p><nav class="ta-footer-links" data-footer-links="true" aria-label="Legal and site links"><a href="../../">Tools</a><a href="../../privacy/">Privacy Policy</a><a href="../../terms/">Terms of Service</a><a href="https://astakula.com/" target="_blank" rel="noopener noreferrer">Astakula</a></nav></div></footer>
+</div>
+<script src="./app.js?v=1"></script>
+</body>
+</html>

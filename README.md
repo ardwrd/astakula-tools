@@ -88,6 +88,11 @@ Route: `/color/contrast/`
 
 The first standalone Color Tools companion checks foreground/background pairs against WCAG 2.2 thresholds, includes normal/large text and non-text UI results, previews the selected pair, accepts shareable `?fg=` and `?bg=` parameters, and can suggest a nearby foreground color that reaches the 4.5:1 AA normal-text target.
 
+#### Gradient Generator
+Route: `/color/gradient/`
+
+Builds linear, radial, and conic gradients with 2–10 editable color stops and exact stop positions. It supports sRGB or OKLCH interpolation, reverse/distribute/randomize controls, live CSS preview, shareable URL parameters, native CSS plus sampled compatibility output, and browser-side PNG export.
+
 ## Privacy and data flow
 
 Most transformations run locally in the browser. Important exceptions or persistent browser behavior currently include:
@@ -153,7 +158,11 @@ astakula-tools/
 │   ├── index.html
 │   ├── style.css
 │   ├── app.js
-│   └── contrast/
+│   ├── contrast/
+│   │   ├── index.html
+│   │   ├── style.css
+│   │   └── app.js
+│   └── gradient/
 │       ├── index.html
 │       ├── style.css
 │       └── app.js
