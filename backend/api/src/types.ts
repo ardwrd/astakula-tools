@@ -1,8 +1,9 @@
+import type { PdfProcessor } from "./worker-container";
 export interface Bindings {
   DB: D1Database;
   FILES: R2Bucket;
   PDF_JOBS: Queue<PdfMessage>;
-  PDF_PROCESSOR: DurableObjectNamespace;
+  PDF_PROCESSOR: DurableObjectNamespace<PdfProcessor>;
   ENVIRONMENT: string;
   MAX_UPLOAD_BYTES: string;
   STAGING_API_KEY?: string;

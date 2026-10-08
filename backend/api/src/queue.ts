@@ -1,7 +1,6 @@
 import { getContainer } from "@cloudflare/containers";
 import type { Bindings, JobRow, PdfMessage } from "./types";
 import { isPdf, nowIso } from "./security";
-import type { PdfProcessor } from "./worker-container";
 
 const MAX_OUTPUT_BYTES = 30 * 1024 * 1024;
 const MAX_ATTEMPTS = 3;
@@ -37,7 +36,7 @@ async function processMessage(message: Message<PdfMessage>, env: Bindings) {
 
     const params = JSON.parse(job.params_json) as { angle: number };
     const container = getContainer(
-      env.PDF_PROCESSOR as DurableObjectNamespace<PdfProcessor>,
+      env.PDF_PROCESSOR,
       "pdf-processor-0"
     );
     const response = await container.fetch(
