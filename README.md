@@ -71,18 +71,17 @@ Creates monthly employee work/shift schedules with configurable shifts and minim
 Uploads an almost-finished certificate design plus spreadsheet participant data, exposes detected columns as dynamic fields, allows field placement and typography controls, previews recipients, and exports PNG batches or a multi-page PDF. Certificate templates and spreadsheet data remain browser-side; selected web fonts are requested from Google Fonts.
 
 ### Color Palette Generator
-The Color Palette Generator is designed around explicit color-system rules rather than random swatches:
+The Color Palette Generator uses a fast, interactive palette-board workflow while keeping explicit color-system rules underneath:
 
-- accepts a starting HEX color or extracts 4–8 representative colors from PNG, JPEG, WebP, or AVIF images;
-- performs image clustering in Oklab and consolidates perceptually similar candidates;
-- generates Brand, UI System, Monochromatic, Analogous, Complementary, Split Complementary, Triadic, or Extracted palettes;
-- builds 50–950 tonal scales in OKLCH and reduces chroma when needed to keep output inside the sRGB gamut;
-- assigns practical roles such as Primary, Secondary, Accent, Background, Surface, Text, and Muted Text where appropriate;
-- checks foreground/background contrast using WCAG 2.2 thresholds: 4.5:1 for normal-text AA, 3:1 for large-text AA, and 7:1 for enhanced normal-text contrast;
-- provides heuristic quality signals for distinctness, tested text accessibility, hue separation, and neutral support, explicitly without treating those scores as design certification;
-- exports CSS variables, JSON, and a PNG palette sheet.
+- generates 2–10 swatches with Brand, UI System, Monochromatic, Analogous, Complementary, Split Complementary, Triadic, or Extracted modes;
+- press Space or use the Generate button to regenerate only unlocked swatches;
+- lock exact HEX values, edit HEX directly, drag or move swatches to reorder them, and add/remove colors without leaving the main palette board;
+- accepts PNG, JPEG, WebP, or AVIF images and extracts perceptually distinct candidates using Oklab clustering;
+- keeps technical inspection in a separate Analyze dialog with OKLCH values, 50–950 tonal scales, pairwise WCAG 2.2 contrast ratios, and heuristic palette signals;
+- reduces OKLCH chroma where needed to map generated colors into the sRGB gamut;
+- exports a HEX list, CSS variables, JSON, and a PNG palette sheet.
 
-All image analysis and palette generation runs in the browser. The implementation does not upload source images to an Astakula application backend.
+The interactive workflow is designed for rapid exploration, but harmony labels and quality signals remain suggestions rather than claims that a palette is objectively suitable for a brand. All image analysis and palette generation runs in the browser; source images are not uploaded to an Astakula application backend.
 
 ## Privacy and data flow
 
