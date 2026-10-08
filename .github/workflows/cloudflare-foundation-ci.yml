@@ -47,3 +47,5 @@ jobs:
       - run: npm test
       - run: node --check js/extended-tools.mjs
       - run: node --check js/app.js
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:browser
