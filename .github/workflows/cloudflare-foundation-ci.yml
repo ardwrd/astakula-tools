@@ -1,0 +1,37 @@
+name: Cloudflare PDF Foundation
+on:
+  push:
+    branches:
+      - feature/cloudflare-foundation
+    paths:
+      - "backend/**"
+      - "services/pdf-processor/**"
+      - ".github/workflows/cloudflare-foundation-ci.yml"
+  pull_request:
+    paths:
+      - "backend/**"
+      - "services/pdf-processor/**"
+      - ".github/workflows/cloudflare-foundation-ci.yml"
+
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend/api
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm install --no-audit --no-fund
+      - run: npm run typecheck
+  processor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -r services/pdf-processor/requirements.txt
+      - run: python -m unittest discover -s services/pdf-processor/tests -v
