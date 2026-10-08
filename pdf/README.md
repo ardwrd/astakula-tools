@@ -42,10 +42,3 @@ Manual acceptance checks:
 8. Confirm no file upload API receives document bytes.
 
 Proxmox integration remains future work behind explicit opt-in and authenticated Cloudflare Tunnel. No backend processing is activated in this phase.
-
-## Browser end-to-end checks (Chromium)
-
-Run `npm run test:browser` after `npx playwright install chromium`.
-CI verifies UI filters, both themes, all 10 PDF workflows, PDF/ZIP payloads, mobile viewport, and saves desktop/mobile screenshots as short-lived CI artifacts. The E2E test substitutes local npm library bundles for CDN resources; real CDN delivery, Firefox, Safari and Android device testing remain separate release checks.
-
-PDF rendering uses the patched PDF.js 4.10.38 ES module and disables script evaluation during document rendering. Do not downgrade to legacy 3.x PDF.js.

@@ -613,3 +613,27 @@ body {
     .catalog-filter { padding: 9px 11px; font-size: 11px; }
     .catalog-section { margin-top: 44px; }
 }
+
+
+html[data-theme="dark"] body .catalog-section .tool-card:not(.is-planned):not(.is-selected):not(:hover) {
+ background: var(--ta-surface);
+ color: var(--ta-text);
+}
+html[data-theme="dark"] body .catalog-section .tool-card.is-planned {
+ background: #191d23;
+ color: var(--ta-muted);
+}
+html[data-theme="dark"] body .catalog-section .tool-card.is-selected,
+html[data-theme="dark"] body .catalog-section .tool-card:not(.is-planned):hover {
+ background: var(--ta-yellow);
+ color: var(--ta-on-accent);
+}
+@media(max-width:480px){
+ .tool-catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;}
+ .tool-card{padding:12px;min-height:175px;gap:8px;}
+ .tool-card strong{font-size:16px;overflow-wrap:anywhere;}
+ .tool-desc{font-size:11px;line-height:1.4;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;}
+ .tool-tag{font-size:8px;padding:4px 5px;}
+ .tool-index{width:28px;height:28px;font-size:10px;}
+ .tool-open,.tool-later{font-size:10px;}
+}

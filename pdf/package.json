@@ -1,16 +1,12 @@
 {
   "name": "@astakula/pdf-browser",
-  "version": "0.2.0",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test tests/operations.test.mjs tests/structure.test.mjs",
-    "test:browser": "node --test tests/browser.test.mjs"
+    "test": "node --test tests/*.test.mjs"
   },
   "devDependencies": {
-    "pdf-lib": "1.17.1",
-    "jszip": "3.10.1",
-    "pdfjs-dist": "4.10.38",
-    "playwright": "^1.55.0"
+    "pdf-lib": "1.17.1"
   }
 }
