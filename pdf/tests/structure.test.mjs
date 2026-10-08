@@ -21,7 +21,7 @@ test("HTML ids remain unique", () => {
   assert.equal(ids.length, new Set(ids).size);
 });
 test("extended tools are wired after the legacy adapter", () => {
-  assert.ok(html.indexOf('src="./js/app.js?v=2"') < html.indexOf('src="./js/extended-tools.mjs?v=1"'));
+  assert.ok(html.indexOf('src="./js/app.js?v=2"') < html.indexOf('src="./js/extended-tools.mjs?v=2"'));
   for (const mode of ["split","remove","images","pdfpng","watermark","numbers"]) {
     assert.ok(extended.includes('byId("' + mode + 'Button")'), "missing action listener: " + mode);
   }
