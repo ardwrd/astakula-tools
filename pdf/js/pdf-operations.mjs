@@ -61,6 +61,8 @@ function kindOfImage(bytes) {
 
 export async function imagesToPdf(lib, images) {
   if(!Array.isArray(images)||!images.length||images.length>12) throw new Error("Choose 1 to 12 images.");
+  if (images.reduce((sum, image) => sum + (image.bytes?.byteLength || 0), 0) > 60 * 1024 * 1024)
+    throw new Error("Images must total 60 MB or less.");
   const pdf=await lib.PDFDocument.create();
   for(const image of images){
     if(!image.bytes || image.bytes.byteLength>15*1024*1024) throw new Error("Each image must be at most 15 MB.");

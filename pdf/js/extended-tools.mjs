@@ -1,4 +1,3 @@
-import * as pdfjsLib from "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.min.mjs";
 import { removePages, splitPages, imagesToPdf, addWatermark, addPageNumbers }
   from "./pdf-operations.mjs";
 
@@ -83,8 +82,8 @@ function imageIsAllowed(file) {
 function setImages(files) {
   const picked = [...files];
   if (!picked.length) return;
-  if (picked.length > 12 || picked.some(f => !imageIsAllowed(f) || f.size > 15 * 1024 * 1024)) {
-    core.setStatus("Choose 1–12 valid PNG/JPEG images, up to 15 MB each.", "error");
+  if (picked.length > 12 || picked.some(f => !imageIsAllowed(f) || f.size > 15 * 1024 * 1024) || picked.reduce((sum, f) => sum + f.size, 0) > 60 * 1024 * 1024) {
+    core.setStatus("Choose 1–12 PNG/JPEG images: up to 15 MB each and 60 MB total.", "error");
     return;
   }
   images = picked;
@@ -136,7 +135,8 @@ byId("pdfpngButton").addEventListener("click", () => run("pdfpng", "Rendering PD
   const { file, bytes } = await bytesFor("pdfpng");
   if (file.size > 20 * 1024 * 1024) throw new Error("PDF to PNG supports files up to 20 MB.");
   if (!window.JSZip) throw new Error("ZIP library unavailable. Refresh and retry.");
-  const pdfjs = pdfjsLib;
+  const pdfjs = await import("https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.min.mjs")
+    .catch(() => { throw new Error("PDF renderer unavailable. Check your connection and retry."); });
   pdfjs.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.worker.min.mjs";
   const loading = pdfjs.getDocument({ data: new Uint8Array(bytes), isEvalSupported: false });
   let documentPdf;
