@@ -1,0 +1,13 @@
+{
+  // Free-tier Worker: no Containers, paid services, databases, queues, or storage.
+  // This Worker only returns metadata. PDF bytes stay on the user's device.
+  "name": "astakula-pdf-api-free-staging",
+  "main": "src/index.mjs",
+  "compatibility_date": "2026-10-08",
+  "workers_dev": true,
+  "observability": { "enabled": true },
+  "vars": {
+    "ENVIRONMENT": "staging",
+    "DEPLOYMENT_PLAN": "cloudflare-free"
+  }
+}

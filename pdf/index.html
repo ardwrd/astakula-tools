@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Merge, extract, reorder, and rotate PDF pages directly in your browser with Tools Astakula.">
+    <meta name="description" content="Organize, split, convert, watermark, and number PDF pages in your browser with Astakula Tools. Files stay on your device.">
     <meta name="robots" content="index,follow">
     <meta name="theme-color" content="#f3f0e8">
 
@@ -11,21 +11,21 @@
     <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 
     <meta property="og:type" content="website">
-    <meta property="og:title" content="PDF Tools — Tools Astakula">
-    <meta property="og:description" content="Merge, extract, reorder, and rotate PDF pages locally in your browser.">
+    <meta property="og:title" content="PDF Tools Hub — Astakula Tools">
+    <meta property="og:description" content="10 browser-based PDF tools for organizing, converting images, and editing pages locally.">
     <meta property="og:url" content="https://tools.astakula.com/pdf/">
     <meta property="og:site_name" content="Tools Astakula">
 
     <meta name="twitter:card" content="summary">
-    <meta name="twitter:title" content="PDF Tools — Tools Astakula">
-    <meta name="twitter:description" content="Merge, extract, reorder, and rotate PDF pages locally in your browser.">
+    <meta name="twitter:title" content="PDF Tools Hub — Astakula Tools">
+    <meta name="twitter:description" content="Free browser PDF tools for splitting, merging, converting images, watermarking, and page numbering.">
 
-    <title>PDF Tools — Tools Astakula</title>
+    <title>PDF Tools Hub — Astakula Tools</title>
 
     <script src="../assets/js/theme.js?v=2"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sprtn/ui@1.3.2/dist/brut.css">
     <link rel="stylesheet" href="../assets/css/astakula.css?v=2">
-    <link rel="stylesheet" href="./style.css?v=1">
+    <link rel="stylesheet" href="./style.css?v=3">
 </head>
 <body>
     <div class="page-shell">
@@ -44,18 +44,135 @@
                 <div class="hero-copy">
                     <p class="eyebrow">PDF TOOLS</p>
                     <h1>Work with PDF pages.</h1>
-                    <p class="hero-description">Merge files, extract pages, change page order, or rotate pages without uploading the PDF anywhere.</p>
+                    <p class="hero-description">Organize, convert, and edit PDFs directly in your browser. No account, no document uploads.</p>
                 </div>
                 <div class="hero-decoration" aria-hidden="true">
                     <span class="pdf-mark">PDF</span>
                 </div>
             </section>
 
-            <section class="mode-section" aria-labelledby="mode-heading">
+
+            <section class="catalog-section" aria-labelledby="catalog-heading" id="tools">
+                <div class="section-heading">
+                    <div><p class="section-number">01 / TOOL LIBRARY</p><h2 id="catalog-heading">Find your PDF tool.</h2></div>
+                    <p>10 browser tools ready. More document tools are planned for the processing server.</p>
+                </div>
+                <div class="catalog-toolbar">
+                    <label class="catalog-search-label" for="toolSearch"><span>Search PDF tools</span><input id="toolSearch" class="brut-input" type="search" autocomplete="off" placeholder="Try: rotate, watermark, convert…"></label>
+                    <div class="catalog-filters" aria-label="Filter PDF tools">
+                        <button type="button" class="catalog-filter is-active" data-catalog-filter="all" aria-pressed="true">All</button>
+                        <button type="button" class="catalog-filter" data-catalog-filter="organize" aria-pressed="false">Organize</button>
+                        <button type="button" class="catalog-filter" data-catalog-filter="convert" aria-pressed="false">Convert</button>
+                        <button type="button" class="catalog-filter" data-catalog-filter="edit" aria-pressed="false">Edit</button>
+                        <button type="button" class="catalog-filter" data-catalog-filter="advanced" aria-pressed="false">Advanced</button>
+                    </div>
+                </div>
+                <p id="catalogCount" class="catalog-count" role="status" aria-live="polite">16 tools shown</p>
+                <div class="tool-catalog-grid">
+                    <button type="button" class="tool-card is-selected" data-tool-card data-category="organize" data-tool-select="merge" aria-pressed="true">
+                        <span class="tool-card-top"><span class="tool-index">01</span><span class="tool-tag">Available</span></span>
+                        <strong>Merge PDFs</strong>
+                        <span class="tool-desc">Combine several documents into one PDF.</span>
+                        <span class="tool-open">Open tool <span aria-hidden="true">↗</span></span>
+                    </button>
+                    <button type="button" class="tool-card" data-tool-card data-category="organize" data-tool-select="split" aria-pressed="false">
+                        <span class="tool-card-top"><span class="tool-index">02</span><span class="tool-tag">Available</span></span>
+                        <strong>Split PDF</strong>
+                        <span class="tool-desc">Export every page as a separate PDF in a ZIP.</span>
+                        <span class="tool-open">Open tool <span aria-hidden="true">↗</span></span>
+                    </button>
+                    <button type="button" class="tool-card" data-tool-card data-category="organize" data-tool-select="extract" aria-pressed="false">
+                        <span class="tool-card-top"><span class="tool-index">03</span><span class="tool-tag">Available</span></span>
+                        <strong>Extract pages</strong>
+                        <span class="tool-desc">Pick specific pages into a new PDF.</span>
+                        <span class="tool-open">Open tool <span aria-hidden="true">↗</span></span>
+                    </button>
+                    <button type="button" class="tool-card" data-tool-card data-category="organize" data-tool-select="remove" aria-pressed="false">
+                        <span class="tool-card-top"><span class="tool-index">04</span><span class="tool-tag">Available</span></span>
+                        <strong>Remove pages</strong>
+                        <span class="tool-desc">Delete selected pages without changing the rest.</span>
+                        <span class="tool-open">Open tool <span aria-hidden="true">↗</span></span>
+                    </button>
+                    <button type="button" class="tool-card" data-tool-card data-category="organize" data-tool-select="reorder" aria-pressed="false">
+                        <span class="tool-card-top"><span class="tool-index">05</span><span class="tool-tag">Available</span></span>
+                        <strong>Reorder pages</strong>
+                        <span class="tool-desc">Change PDF page order.</span>
+                        <span class="tool-open">Open tool <span aria-hidden="true">↗</span></span>
+                    </button>
+                    <button type="button" class="tool-card" data-tool-card data-category="organize" data-tool-select="rotate" aria-pressed="false">
+                        <span class="tool-card-top"><span class="tool-index">06</span><span class="tool-tag">Available</span></span>
+                        <strong>Rotate pages</strong>
+                        <span class="tool-desc">Rotate selected PDF pages.</span>
+                        <span class="tool-open">Open tool <span aria-hidden="true">↗</span></span>
+                    </button>
+                    <button type="button" class="tool-card" data-tool-card data-category="convert" data-tool-select="images" aria-pressed="false">
+                        <span class="tool-card-top"><span class="tool-index">07</span><span class="tool-tag">Available</span></span>
+                        <strong>Images to PDF</strong>
+                        <span class="tool-desc">Convert PNG and JPG images into one PDF.</span>
+                        <span class="tool-open">Open tool <span aria-hidden="true">↗</span></span>
+                    </button>
+                    <button type="button" class="tool-card" data-tool-card data-category="convert" data-tool-select="pdfpng" aria-pressed="false">
+                        <span class="tool-card-top"><span class="tool-index">08</span><span class="tool-tag">Available</span></span>
+                        <strong>PDF to PNG</strong>
+                        <span class="tool-desc">Render PDF pages as PNG images in a ZIP.</span>
+                        <span class="tool-open">Open tool <span aria-hidden="true">↗</span></span>
+                    </button>
+                    <button type="button" class="tool-card" data-tool-card data-category="edit" data-tool-select="watermark" aria-pressed="false">
+                        <span class="tool-card-top"><span class="tool-index">09</span><span class="tool-tag">Available</span></span>
+                        <strong>Watermark PDF</strong>
+                        <span class="tool-desc">Stamp text across every page.</span>
+                        <span class="tool-open">Open tool <span aria-hidden="true">↗</span></span>
+                    </button>
+                    <button type="button" class="tool-card" data-tool-card data-category="edit" data-tool-select="numbers" aria-pressed="false">
+                        <span class="tool-card-top"><span class="tool-index">10</span><span class="tool-tag">Available</span></span>
+                        <strong>Page numbers</strong>
+                        <span class="tool-desc">Add page numbers to every page.</span>
+                        <span class="tool-open">Open tool <span aria-hidden="true">↗</span></span>
+                    </button>
+                    <article class="tool-card is-planned" data-tool-card data-category="advanced">
+                        <span class="tool-card-top"><span class="tool-index">11</span><span class="tool-tag is-upcoming">Planned</span></span>
+                        <strong>Compress PDF</strong>
+                        <span class="tool-desc">Advanced size reduction with Ghostscript.</span>
+                        <span class="tool-later">Proxmox processing phase</span>
+                    </article>
+                    <article class="tool-card is-planned" data-tool-card data-category="advanced">
+                        <span class="tool-card-top"><span class="tool-index">12</span><span class="tool-tag is-upcoming">Planned</span></span>
+                        <strong>Repair PDF</strong>
+                        <span class="tool-desc">Recover content from damaged documents.</span>
+                        <span class="tool-later">Proxmox processing phase</span>
+                    </article>
+                    <article class="tool-card is-planned" data-tool-card data-category="advanced">
+                        <span class="tool-card-top"><span class="tool-index">13</span><span class="tool-tag is-upcoming">Planned</span></span>
+                        <strong>OCR PDF</strong>
+                        <span class="tool-desc">Turn scanned pages into searchable text.</span>
+                        <span class="tool-later">Proxmox processing phase</span>
+                    </article>
+                    <article class="tool-card is-planned" data-tool-card data-category="convert">
+                        <span class="tool-card-top"><span class="tool-index">14</span><span class="tool-tag is-upcoming">Planned</span></span>
+                        <strong>Office conversion</strong>
+                        <span class="tool-desc">Convert Word, Excel, and PowerPoint.</span>
+                        <span class="tool-later">Proxmox processing phase</span>
+                    </article>
+                    <article class="tool-card is-planned" data-tool-card data-category="advanced">
+                        <span class="tool-card-top"><span class="tool-index">15</span><span class="tool-tag is-upcoming">Planned</span></span>
+                        <strong>Protect / unlock</strong>
+                        <span class="tool-desc">Manage encrypted documents securely.</span>
+                        <span class="tool-later">Proxmox processing phase</span>
+                    </article>
+                    <article class="tool-card is-planned" data-tool-card data-category="edit">
+                        <span class="tool-card-top"><span class="tool-index">16</span><span class="tool-tag is-upcoming">Planned</span></span>
+                        <strong>Digital signatures</strong>
+                        <span class="tool-desc">Certificate-backed signing.</span>
+                        <span class="tool-later">Proxmox processing phase</span>
+                    </article>
+                </div>
+            </section>
+
+            <section class="mode-section" id="workspace" aria-labelledby="mode-heading">
                 <div class="section-heading">
                     <div>
-                        <p class="section-number">01</p>
-                        <h2 id="mode-heading">Choose an action</h2>
+                        <p class="section-number">02 / WORKSPACE</p>
+                        <h2 id="mode-heading">Your workspace</h2>
                     </div>
                     <p>PDF processing happens locally in this browser.</p>
                 </div>
@@ -65,6 +182,12 @@
                     <button class="mode-tab" type="button" role="tab" aria-selected="false" data-mode="extract">Extract pages</button>
                     <button class="mode-tab" type="button" role="tab" aria-selected="false" data-mode="reorder">Reorder</button>
                     <button class="mode-tab" type="button" role="tab" aria-selected="false" data-mode="rotate">Rotate</button>
+                    <button class="mode-tab" type="button" role="tab" aria-selected="false" data-mode="split">Split</button>
+                    <button class="mode-tab" type="button" role="tab" aria-selected="false" data-mode="remove">Remove</button>
+                    <button class="mode-tab" type="button" role="tab" aria-selected="false" data-mode="images">Images to PDF</button>
+                    <button class="mode-tab" type="button" role="tab" aria-selected="false" data-mode="pdfpng">PDF to PNG</button>
+                    <button class="mode-tab" type="button" role="tab" aria-selected="false" data-mode="watermark">Watermark</button>
+                    <button class="mode-tab" type="button" role="tab" aria-selected="false" data-mode="numbers">Page numbers</button>
                 </div>
             </section>
 
@@ -189,6 +312,109 @@
                 </div>
             </section>
 
+
+            <section id="splitPanel" class="tool-panel hidden" data-panel="split">
+                <div class="panel-heading">
+                    <div><p class="section-number">03 / PROCESS</p><h2>Split into individual pages</h2></div>
+                    <span id="splitMeta" class="panel-meta">No file</span>
+                </div>
+                <p class="tool-explainer">Each PDF page becomes a separate PDF file. Download everything as a ZIP. Maximum 40 pages per run.</p>
+                <label id="splitDropZone" class="drop-zone drop-zone-compact" for="splitInput">
+                    <strong>Drop or choose a PDF</strong>
+                    <span>Processed on your device · Up to 50 MB</span>
+                </label>
+                <input id="splitInput" class="visually-hidden" type="file" accept="application/pdf,.pdf">
+                <p class="field-hint">The original document is never modified.</p>
+                <div class="panel-actions">
+                    <button id="splitButton" class="brut-btn brut-btn--primary" type="button">Split to ZIP</button>
+                    <button id="clearsplitButton" class="brut-btn" type="button">Clear</button>
+                </div>
+            </section>
+
+            <section id="removePanel" class="tool-panel hidden" data-panel="remove">
+                <div class="panel-heading">
+                    <div><p class="section-number">03 / PROCESS</p><h2>Remove PDF pages</h2></div>
+                    <span id="removeMeta" class="panel-meta">No file</span>
+                </div>
+                <p class="tool-explainer">Enter pages to delete. At least one page must remain in your document.</p>
+                <label id="removeDropZone" class="drop-zone drop-zone-compact" for="removeInput">
+                    <strong>Drop or choose a PDF</strong>
+                    <span>Processed on your device · Up to 50 MB</span>
+                </label>
+                <input id="removeInput" class="visually-hidden" type="file" accept="application/pdf,.pdf">
+                <div class="form-grid"><label class="field-group" for="removePages"><span>Pages to remove</span><input id="removePages" class="brut-input" type="text" autocomplete="off" placeholder="2, 5-7"><small>Use comma-separated numbers or ranges.</small></label></div>
+                <div class="panel-actions">
+                    <button id="removeButton" class="brut-btn brut-btn--primary" type="button">Remove pages</button>
+                    <button id="clearremoveButton" class="brut-btn" type="button">Clear</button>
+                </div>
+            </section>
+<section id="imagesPanel" class="tool-panel hidden" data-panel="images">
+                <div class="panel-heading"><div><p class="section-number">03 / PROCESS</p><h2>Images to PDF</h2></div><span id="imagesMeta" class="panel-meta">No images</span></div>
+                <p class="tool-explainer">Combine up to 12 PNG or JPG images into a PDF. Each image gets its own fitted A4 page.</p>
+                <label id="imagesDropZone" class="drop-zone drop-zone-compact" for="imagesInput">
+                    <strong>Drop or choose PNG / JPG images</strong><span>Up to 12 images · 15 MB each</span>
+                </label>
+                <input id="imagesInput" class="visually-hidden" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg" multiple>
+                <div id="imagesList" class="file-queue hidden" aria-live="polite"></div>
+                <div class="panel-actions">
+                    <button id="imagesButton" class="brut-btn brut-btn--primary" type="button">Create PDF</button>
+                    <button id="clearimagesButton" class="brut-btn" type="button">Clear</button>
+                </div>
+            </section>
+
+            <section id="pdfpngPanel" class="tool-panel hidden" data-panel="pdfpng">
+                <div class="panel-heading">
+                    <div><p class="section-number">03 / PROCESS</p><h2>PDF to PNG</h2></div>
+                    <span id="pdfpngMeta" class="panel-meta">No file</span>
+                </div>
+                <p class="tool-explainer">Render pages to high-resolution PNG files and download a ZIP. Up to 25 pages and a 20 MB input.</p>
+                <label id="pdfpngDropZone" class="drop-zone drop-zone-compact" for="pdfpngInput">
+                    <strong>Drop or choose a PDF</strong>
+                    <span>Processed on your device · Up to 50 MB</span>
+                </label>
+                <input id="pdfpngInput" class="visually-hidden" type="file" accept="application/pdf,.pdf">
+                <p class="field-hint">A rendered image does not preserve editable PDF text or links.</p>
+                <div class="panel-actions">
+                    <button id="pdfpngButton" class="brut-btn brut-btn--primary" type="button">Export PNG ZIP</button>
+                    <button id="clearpdfpngButton" class="brut-btn" type="button">Clear</button>
+                </div>
+            </section>
+
+            <section id="watermarkPanel" class="tool-panel hidden" data-panel="watermark">
+                <div class="panel-heading">
+                    <div><p class="section-number">03 / PROCESS</p><h2>Watermark PDF</h2></div>
+                    <span id="watermarkMeta" class="panel-meta">No file</span>
+                </div>
+                <p class="tool-explainer">Add a centered text watermark to every page.</p>
+                <label id="watermarkDropZone" class="drop-zone drop-zone-compact" for="watermarkInput">
+                    <strong>Drop or choose a PDF</strong>
+                    <span>Processed on your device · Up to 50 MB</span>
+                </label>
+                <input id="watermarkInput" class="visually-hidden" type="file" accept="application/pdf,.pdf">
+                <div class="form-grid form-grid-two"><label class="field-group" for="watermarkText"><span>Watermark text</span><input id="watermarkText" class="brut-input" type="text" autocomplete="off" maxlength="60" placeholder="DRAFT"><small>Basic Latin letters, numbers, and punctuation.</small></label><label class="field-group" for="watermarkOpacity"><span>Visibility</span><select class="brut-select" id="watermarkOpacity"><option value="0.15">Light</option><option value="0.25" selected>Medium</option><option value="0.45">Strong</option></select></label></div>
+                <div class="panel-actions">
+                    <button id="watermarkButton" class="brut-btn brut-btn--primary" type="button">Apply watermark</button>
+                    <button id="clearwatermarkButton" class="brut-btn" type="button">Clear</button>
+                </div>
+            </section>
+
+            <section id="numbersPanel" class="tool-panel hidden" data-panel="numbers">
+                <div class="panel-heading">
+                    <div><p class="section-number">03 / PROCESS</p><h2>Page numbers</h2></div>
+                    <span id="numbersMeta" class="panel-meta">No file</span>
+                </div>
+                <p class="tool-explainer">Add page numbers in the format 1 / N along the bottom of every page.</p>
+                <label id="numbersDropZone" class="drop-zone drop-zone-compact" for="numbersInput">
+                    <strong>Drop or choose a PDF</strong>
+                    <span>Processed on your device · Up to 50 MB</span>
+                </label>
+                <input id="numbersInput" class="visually-hidden" type="file" accept="application/pdf,.pdf">
+                <div class="form-grid"><label class="field-group" for="numberPosition"><span>Position</span><select class="brut-select" id="numberPosition"><option value="right" selected>Bottom right</option><option value="center">Bottom center</option></select></label></div>
+                <div class="panel-actions">
+                    <button id="numbersButton" class="brut-btn brut-btn--primary" type="button">Add page numbers</button>
+                    <button id="clearnumbersButton" class="brut-btn" type="button">Clear</button>
+                </div>
+            </section>
             <section id="resultPanel" class="result-panel hidden" aria-labelledby="result-heading">
                 <div class="panel-heading">
                     <div>
@@ -225,8 +451,8 @@
                 </article>
                 <article class="info-card">
                     <span class="info-number">03</span>
-                    <h3>No conversion</h3>
-                    <p>Pages are copied inside PDF files rather than rendered into images.</p>
+                    <h3>No account needed</h3>
+                    <p>Run available tools for free. Advanced conversion and OCR are planned for a future processing server.</p>
                 </article>
             </section>
         </main>
@@ -240,6 +466,8 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
-    <script type="module" src="./js/app.js?v=1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+    <script type="module" src="./js/app.js?v=2"></script>
+    <script type="module" src="./js/extended-tools.mjs?v=2"></script>
 </body>
 </html>

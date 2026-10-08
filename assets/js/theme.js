@@ -136,23 +136,24 @@
             related: ["gif", "favicon", "pdf"]
         },
         pdf: {
-            name: "PDF Tools",
-            title: "PDF Tools — Astakula Tools",
-            description: "Merge PDF files, extract pages, reorder pages, or rotate selected pages directly in the browser.",
+            name: "PDF Tools Hub",
+            title: "PDF Tools Hub — Astakula Tools",
+            description: "Use 10 free browser-based tools to merge, split, organize, convert images, watermark, and number PDF pages locally.",
             category: "UtilitiesApplication",
-            question: "What can Astakula PDF Tools do?",
-            answer: "Astakula PDF Tools edits PDF page structure in the browser. It can merge PDF files, extract page ranges, reorder pages, and rotate selected pages without rendering each page into an image.",
+            question: "What can the Astakula PDF Tools Hub do?",
+            answer: "Astakula PDF Tools lets you merge, split, extract, remove, reorder, rotate, watermark, and number PDF pages, convert PNG/JPG to PDF, and render PDF pages as PNG. Operations run in your browser.",
             howTo: [
-                "Choose Merge, Extract pages, Reorder, or Rotate.",
-                "Add the required PDF file or files and enter page ranges when needed.",
-                "Run the operation and download the resulting PDF."
+                "Choose an available tool from the catalog or workspace tabs.",
+                "Add your PDF or images, then configure the relevant options.",
+                "Process the document locally and download the PDF or ZIP result."
             ],
-            useCases: ["Combine several PDFs", "Save selected pages as a new PDF", "Correct page order or rotation"],
-            features: ["PDF merge", "Page extraction", "Page reordering", "Page rotation"],
+            useCases: ["Organize and edit PDF pages", "Convert JPG and PNG images to PDF", "Export PDF pages as PNG", "Add text watermarks and page numbers"],
+            features: ["PDF merge and split", "Page extraction and removal", "Page reordering and rotation", "Image to PDF and PDF to PNG", "Text watermark", "Page numbering"],
             faq: [
-                { q: "Are PDFs uploaded to an Astakula server?", a: "No Astakula application backend receives the selected PDFs. The current PDF operations run in the browser using a browser-side PDF library." },
-                { q: "Are password-protected PDFs supported?", a: "Password-protected PDFs are not supported by the current tool." },
-                { q: "Does the tool convert PDF pages into images?", a: "No. The implemented operations copy and rearrange PDF pages rather than rasterizing them into images." }
+                { q: "Does Astakula upload the documents I select?", a: "No. The currently available PDF tools process the selected documents locally in your browser, not on an Astakula processing server." },
+                { q: "Can I use password-protected PDFs?", a: "No. Encrypted PDF processing is planned for a future native processing engine." },
+                { q: "Do the converted PNG images preserve selectable PDF text?", a: "No. PDF to PNG rasterizes each PDF page into an image and delivers images together in a ZIP file." },
+                { q: "Which features require a processing server?", a: "OCR, advanced compression, file repair, and high-fidelity Office conversion are planned, not yet available." }
             ],
             related: ["image", "excel", "gif"]
         },
