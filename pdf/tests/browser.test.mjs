@@ -1,7 +1,7 @@
 import test, { before, after } from "node:test";
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
-import { readFile, mkdtemp, rm } from "node:fs/promises";
+import { readFile, mkdtemp, rm, mkdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -58,8 +58,8 @@ async function fixturePdf(count=3) {
   return Buffer.from(await pdf.save());
 }
 
-async function launchPage() {
-  const page = await browser.newPage({acceptDownloads:true});
+async function launchPage(options = {}) {
+  const page = await browser.newPage({acceptDownloads:true, ...options});
   const errors=[];
   page.on("pageerror", e=>errors.push(String(e)));
   await page.route("https://cdn.jsdelivr.net/**", async route => {
@@ -116,6 +116,8 @@ test("tool cards, dark mode, filtering and privacy are functional", async () => 
     assert.equal(await page.locator('#mergePanel').isVisible(),false);
     await page.locator('[data-theme-toggle]').first().click();
     assert.equal(await page.locator("html").getAttribute("data-theme"),"dark");
+    await mkdir(path.join(pdfDir,"artifacts"),{recursive:true});
+    await page.screenshot({path:path.join(pdfDir,"artifacts","toolhub-desktop.png"),fullPage:true});
     assert.deepEqual(errors,[]);
   } finally {await page.close();}
 });
@@ -194,4 +196,30 @@ test("watermark and page numbers keep output PDF page counts", async () => {
     assert.equal((await PDFLib.PDFDocument.load((await runDownload(page,"numbersButton")).bytes)).getPageCount(),2);
     assert.deepEqual(errors,[]);
   }finally{await page.close();}
+});
+
+
+test("mobile viewport keeps the catalog usable and completes a split download", async () => {
+  const {page,errors}=await launchPage({
+    viewport:{width:390,height:844},isMobile:true,hasTouch:true,deviceScaleFactor:2
+  });
+  try {
+    const layout=await page.evaluate(()=>({
+      viewport:document.documentElement.clientWidth,
+      content:document.documentElement.scrollWidth
+    }));
+    assert.ok(layout.content<=layout.viewport+4,"unexpected horizontal overflow: "+JSON.stringify(layout));
+    assert.equal(await page.locator('[data-tool-select]').count(),10);
+    await page.locator('[data-tool-select="split"]').click();
+    assert.equal(await page.locator("#splitPanel").isVisible(),true);
+    await loadFile(page,"split",await fixturePdf(2));
+    const zip=await JSZip.loadAsync((await runDownload(page,"splitButton")).bytes);
+    assert.equal(Object.keys(zip.files).filter(f=>f.endsWith(".pdf")).length,2);
+    await page.locator('[data-catalog-filter="advanced"]').click();
+    assert.equal(await page.locator('[data-tool-card]:not(.hidden)').count(),4);
+    await page.locator('[data-catalog-filter="all"]').click();
+    await mkdir(path.join(pdfDir,"artifacts"),{recursive:true});
+    await page.screenshot({path:path.join(pdfDir,"artifacts","toolhub-mobile.png"),fullPage:true});
+    assert.deepEqual(errors,[]);
+  } finally {await page.close();}
 });
