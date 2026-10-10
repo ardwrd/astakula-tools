@@ -124,3 +124,18 @@ test("image mode rejects invalid input without affecting normal URL QR",async()=
         assert.deepEqual(errors,[]);
     } finally {await page.close();}
 });
+
+test("mobile Image to QR form remains usable and avoids horizontal overflow",async()=>{
+    const {page,errors}=await newPage();
+    try {
+        await page.setViewportSize({width:390,height:844});
+        await page.locator('[data-generator-id="image"]').click();
+        const metrics=await page.evaluate(()=>({width:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth}));
+        assert.ok(metrics.scroll<=metrics.width+4,"horizontal overflow on mobile: "+JSON.stringify(metrics));
+        assert.equal(await page.locator('#qr-field-image-image').isVisible(),true);
+        await page.locator('#qr-field-image-mode').selectOption("url");
+        assert.equal(await page.locator('#qr-field-image-image').isVisible(),false);
+        assert.equal(await page.locator('#qr-field-image-url').isVisible(),true);
+        assert.deepEqual(errors,[]);
+    }finally{await page.close();}
+});

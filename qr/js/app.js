@@ -317,6 +317,7 @@ class QRApplication {
         if (this.busy) return;
         const sequence = ++this.generationSequence;
         this.clearError();
+        this.resetResult();
         this.busy = true;
         this.elements.generateButton.disabled = true;
 
