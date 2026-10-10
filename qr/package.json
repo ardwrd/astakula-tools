@@ -1,0 +1,14 @@
+{
+  "name": "@astakula/qr-browser",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "check": "node --check js/app.js && node --check js/form-renderer.js && node --check js/generators/image.js && node --check image/viewer.js"
+  },
+  "devDependencies": {
+    "playwright": "^1.55.0",
+    "qrcode-generator": "1.4.4"
+  }
+}

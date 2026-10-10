@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#f3f0e8">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <script src="../../assets/js/theme.js?v=2"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sprtn/ui@1.3.2/dist/brut.css">
+  <link rel="stylesheet" href="../../assets/css/astakula.css?v=2">
+  <link rel="stylesheet" href="../style.css?v=3">
+  <title>Lihat Gambar QR — Astakula Tools</title>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="site-header"><div class="site-header-inner">
+      <a class="brand" href="../../" aria-label="Astakula Tools home">Tools Astakula</a>
+      <div class="header-meta"><button class="theme-toggle" type="button" data-theme-toggle>Dark</button>
+      <span class="header-badge">Image to QR</span></div>
+    </div></header>
+    <main class="main-content">
+      <section class="qr-image-viewer" aria-labelledby="viewerTitle">
+        <p class="eyebrow">QR IMAGE VIEWER</p>
+        <h1 id="viewerTitle">Gambar dari QR</h1>
+        <p id="viewerMessage" role="status" aria-live="polite">Membaca gambar…</p>
+        <img id="viewerImage" alt="Thumbnail gambar yang tersimpan dalam QR" hidden>
+        <a id="viewerDownload" class="button button-primary" download="astakula-qr-image.jpg" hidden>Unduh thumbnail</a>
+        <a href="../" class="button button-secondary">Buat QR baru</a>
+        <p class="viewer-privacy">Data gambar mini tersimpan pada bagian fragment URL (#), bukan dikirim dalam permintaan web ke server. Siapa pun yang memiliki QR dapat melihat thumbnail.</p>
+      </section>
+    </main>
+    <footer class="site-footer"><div class="site-footer-inner"><p>Tools Astakula</p><p>astakula.com</p></div></footer>
+  </div>
+  <script src="./viewer.js?v=1" defer></script>
+</body>
+</html>

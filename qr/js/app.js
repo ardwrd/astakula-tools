@@ -16,6 +16,8 @@ class QRApplication {
         this.exporter = null;
 
         this.currentResult = null;
+        this.generationSequence = 0;
+        this.busy = false;
 
         this.elements = {};
     }
@@ -287,6 +289,7 @@ class QRApplication {
      * Handle QR type switching.
      */
     handleGeneratorChange(generator) {
+        this.generationSequence += 1;
         this.clearError();
         this.resetResult();
 
@@ -310,12 +313,18 @@ class QRApplication {
     /**
      * Generate QR from active generator.
      */
-    generateQr() {
+    async generateQr() {
+        if (this.busy) return;
+        const sequence = ++this.generationSequence;
         this.clearError();
+        this.resetResult();
+        this.busy = true;
+        this.elements.generateButton.disabled = true;
 
         try {
             const result =
-                this.formRenderer.generate();
+                await this.formRenderer.generate();
+            if (sequence !== this.generationSequence) return;
 
             if (!result) {
                 return;
@@ -331,12 +340,11 @@ class QRApplication {
                 );
             }
 
-            this.currentResult =
-                result;
-
+            this.qrRenderer.size = this.formRenderer.getActiveGenerator().id === "image" ? 560 : 280;
             this.qrRenderer.render(
                 result.payload
             );
+            this.currentResult = result;
 
             this.renderResult(
                 result
@@ -345,7 +353,10 @@ class QRApplication {
             this.showResult();
 
         } catch (error) {
-            this.handleError(error);
+            if (sequence === this.generationSequence) this.handleError(error);
+        } finally {
+            this.busy = false;
+            this.elements.generateButton.disabled = false;
         }
     }
 
@@ -533,6 +544,7 @@ class QRApplication {
      * Reset current form.
      */
     reset() {
+        this.generationSequence += 1;
         this.clearError();
 
         this.formRenderer.reset();
