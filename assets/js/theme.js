@@ -12,7 +12,7 @@
         qr: {
             name: "QR Code Generator",
             title: "QR Code Generator — Astakula Tools",
-            description: "Create QR codes for URLs, text, WhatsApp, Wi-Fi, email, phone, SMS, contacts, locations, and calendar events, then export PNG or SVG.",
+            description: "Create QR codes for images, links, text, WhatsApp, Wi-Fi, email, phone, SMS, contacts, locations, and calendar events. Export PNG or SVG.",
             category: "UtilitiesApplication",
             question: "What is a QR code generator?",
             answer: "A QR code generator converts supported text or structured data into a scannable QR code. This tool supports URLs, text, WhatsApp, Wi-Fi, email, phone, SMS, vCard contacts, locations, and calendar events.",
@@ -22,11 +22,12 @@
                 "Check the preview, then download the result as PNG or SVG."
             ],
             useCases: ["Share a web link or message", "Create Wi-Fi or contact QR codes", "Prepare location or calendar-event QR codes"],
-            features: ["URL and text QR codes", "WhatsApp and Wi-Fi payloads", "Contact, location, and event payloads", "PNG and SVG export"],
+            features: ["URL and text QR codes", "Image-to-QR thumbnails and image links", "WhatsApp and Wi-Fi payloads", "Contact, location, and event payloads", "PNG and SVG export"],
             faq: [
                 { q: "Does Astakula Tools upload the QR data?", a: "No Astakula application backend is used by the QR generator. The QR payload is assembled and rendered in the browser." },
                 { q: "Can a QR code itself expire?", a: "The generated QR image has no built-in expiry. A QR code that points to an external URL can stop being useful if that destination changes or becomes unavailable." },
-                { q: "Which download formats are supported?", a: "The QR generator exports PNG and SVG files." }
+                { q: "Which download formats are supported?", a: "The QR generator exports PNG and SVG files." },
+                { q: "Can I put a photo inside a QR code?", a: "Only a very small thumbnail can fit inside a standard QR code. Image to QR supports locally compressed thumbnails and links to full-resolution public images. A thumbnail QR opens the Astakula viewer using URL fragment data; no image file is uploaded." }
             ],
             related: ["json", "base64", "image"]
         },

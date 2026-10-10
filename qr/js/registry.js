@@ -9,6 +9,7 @@ import smsGenerator from "./generators/sms.js";
 import vcardGenerator from "./generators/vcard.js";
 import locationGenerator from "./generators/location.js";
 import eventGenerator from "./generators/event.js";
+import imageGenerator from "./generators/image.js";
 
 const generatorList = [
     urlGenerator,
@@ -20,7 +21,8 @@ const generatorList = [
     smsGenerator,
     vcardGenerator,
     locationGenerator,
-    eventGenerator
+    eventGenerator,
+    imageGenerator
 ];
 
 /**

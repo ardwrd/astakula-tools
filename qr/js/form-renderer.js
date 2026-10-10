@@ -389,6 +389,7 @@ export class FormRenderer {
             "url",
             "email",
             "password",
+            "file",
             "number",
             "date",
             "time"
@@ -512,6 +513,8 @@ export class FormRenderer {
         input.classList.add(
             "form-control"
         );
+
+        if (field.type === "file" && field.accept) input.accept = field.accept;
 
         if (field.placeholder) {
             input.placeholder =
@@ -764,7 +767,7 @@ export class FormRenderer {
             return input.checked;
         }
 
-        return input.value;
+        return input.type === "file" ? input.files?.[0] || null : input.value;
     }
 
     /**

@@ -1868,3 +1868,46 @@ select.form-control {
     }
 
 }
+
+/* Image to QR — keep the existing square-corner Astakula design. */
+input.form-control[type="file"] {
+    padding: 11px 13px;
+    cursor: pointer;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+input.form-control[type="file"]::file-selector-button {
+    border: 2px solid var(--color-border);
+    background: var(--color-primary);
+    color: var(--ta-on-accent, #111318);
+    padding: 8px 10px;
+    margin-right: 12px;
+    border-radius: 0;
+    font-weight: 800;
+    cursor: pointer;
+}
+.qr-preview { max-width: 100%; }
+.qr-preview .qr-renderer-canvas { width: min(100%, 560px); height: auto; margin: 0 auto; }
+.qr-image-viewer {
+    width: min(100%, 740px);
+    padding: clamp(22px, 5vw, 44px);
+    background: var(--color-surface);
+    border: 3px solid var(--color-border);
+    box-shadow: var(--shadow-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+}
+.qr-image-viewer h1 { font-size: clamp(28px, 5vw, 48px); margin: 0; }
+.qr-image-viewer p { max-width: 630px; line-height: 1.65; margin: 0; }
+.qr-image-viewer img {
+    display: block;
+    max-width: min(100%, 320px);
+    height: auto;
+    image-rendering: auto;
+    border: 2px solid var(--color-border);
+    background: white;
+}
+.qr-image-viewer img[hidden], .qr-image-viewer a[hidden] { display: none !important; }
+.qr-image-viewer .viewer-privacy { font-size: 12px; color: var(--color-muted); }

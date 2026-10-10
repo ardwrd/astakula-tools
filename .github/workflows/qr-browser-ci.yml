@@ -1,0 +1,28 @@
+name: QR Image to QR Browser QA
+on:
+  push:
+    branches:
+      - feature/qr-image-to-qr
+      - main
+    paths:
+      - "qr/**"
+      - ".github/workflows/qr-browser-ci.yml"
+  pull_request:
+    paths:
+      - "qr/**"
+      - ".github/workflows/qr-browser-ci.yml"
+jobs:
+  qr-browser:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: qr
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm install --no-audit --no-fund
+      - run: npm run check
+      - run: npx playwright install --with-deps chromium
+      - run: npm test
