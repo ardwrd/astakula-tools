@@ -67,6 +67,7 @@
                         <option value="SHA-512">SHA-512</option>
                     </select>
                 </label>
+                <p id="algorithmSecurityNote" role="note" aria-live="polite">SHA-256, SHA-384, and SHA-512 are recommended for modern integrity checks.</p>
 
                 <label class="control-group" for="caseSelect">
                     <span>Output case</span>
@@ -165,7 +166,7 @@
                 <article class="info-card">
                     <span class="info-number">01</span>
                     <h3>Common algorithms</h3>
-                    <p>MD5, SHA-1, SHA-256, SHA-384, and SHA-512 are available.</p>
+                    <p>MD5 and SHA-1 are provided only for legacy checksum compatibility. They are collision-vulnerable and must not be used for security-sensitive signatures or file authenticity verification. SHA-256, SHA-384, and SHA-512 are available.</p>
                 </article>
                 <article class="info-card">
                     <span class="info-number">02</span>
