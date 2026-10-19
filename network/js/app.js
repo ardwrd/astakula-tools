@@ -46,8 +46,13 @@ function prefixMask(prefix) {
 }
 
 function ipv4Class(octets) {
-    const [a, b] = octets;
+    const [a, b, c] = octets;
     if (a === 10 || (a === 172 && b >= 16 && b <= 31) || (a === 192 && b === 168)) return "Private (RFC1918)";
+    if (a === 100 && b >= 64 && b <= 127) return "Shared CGNAT (RFC6598)";
+    if ((a === 192 && b === 0 && c === 2) ||
+        (a === 198 && b === 51 && c === 100) ||
+        (a === 203 && b === 0 && c === 113)) return "Documentation (TEST-NET)";
+    if (a === 198 && (b === 18 || b === 19)) return "Benchmark testing (RFC2544)";
     if (a === 127) return "Loopback";
     if (a === 169 && b === 254) return "Link-local";
     if (a >= 224 && a <= 239) return "Multicast";

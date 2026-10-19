@@ -77,3 +77,24 @@ test("subnet splitter does not treat an empty target as /0", () => {
     vm.runInContext("calculateSplit()", context);
     assert.match(document.getElementById("statusBox").className, /is-error/);
 });
+
+test("distinguishes CGNAT, documentation and benchmark IPv4 blocks", () => {
+    const cases = [
+        ["10.0.0.1", "Private (RFC1918)"],
+        ["100.64.0.1", "Shared CGNAT (RFC6598)"],
+        ["100.127.255.254", "Shared CGNAT (RFC6598)"],
+        ["192.0.2.1", "Documentation (TEST-NET)"],
+        ["198.51.100.10", "Documentation (TEST-NET)"],
+        ["203.0.113.20", "Documentation (TEST-NET)"],
+        ["198.18.0.1", "Benchmark testing (RFC2544)"],
+        ["198.19.255.254", "Benchmark testing (RFC2544)"],
+        ["127.0.0.1", "Loopback"],
+        ["8.8.8.8", "Public / globally routable candidate"]
+    ];
+    for (const [address, expected] of cases) {
+        const expr = "ipv4Class(parseIPv4(" + JSON.stringify(address) + ").octets)";
+        assert.equal(vm.runInContext(expr, context), expected, address);
+    }
+    assert.equal(vm.runInContext('ipv4Class(parseIPv4("100.128.0.1").octets)', context),
+        "Public / globally routable candidate");
+});
