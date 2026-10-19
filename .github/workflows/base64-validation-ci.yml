@@ -1,0 +1,17 @@
+name: Base64 Validation
+on:
+  push:
+    branches: [main]
+    paths: ["base64/**", ".github/workflows/base64-validation-ci.yml"]
+  pull_request:
+    paths: ["base64/**", ".github/workflows/base64-validation-ci.yml"]
+jobs:
+  node-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: node --check base64/js/app.js
+      - run: node --test base64/tests/*.test.mjs
