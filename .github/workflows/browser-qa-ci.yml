@@ -33,4 +33,5 @@ jobs:
           node-version: "22"
       - run: npm install --no-audit --no-fund
       - run: npx playwright install --with-deps chromium
+      - run: node --test ../excel/tests/*.test.mjs
       - run: npm run test:browser
