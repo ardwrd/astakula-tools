@@ -118,3 +118,52 @@ test("rate-limit reset feedback includes time when GitHub supplies it", async ()
     await h.submit();
     assert.match(h.document.getElementById("statusMessage").textContent, /Coba kembali setelah/);
 });
+
+
+test("a slow earlier response cannot replace a newer successful search", async () => {
+    const requests = [];
+    const h = harness((url) => new Promise((resolve) => requests.push({ url, resolve })));
+    h.document.getElementById("repoInput").value = "old/first";
+    const oldTask = h.submit();
+    h.document.getElementById("repoInput").value = "new/latest";
+    const newTask = h.submit();
+
+    const latest = { ...sample, full_name: "new/latest", name: "latest", owner: { login: "new" } };
+    requests[1].resolve({ ok: true, json: async () => latest });
+    await newTask;
+    requests[0].resolve({ ok: true, json: async () => sample });
+    await oldTask;
+
+    assert.equal(h.document.getElementById("repoName").textContent, "new/latest");
+    assert.equal(h.document.getElementById("exportButton").hidden, false);
+    assert.match(h.changedUrl, /new%2Flatest/);
+    assert.equal(h.document.getElementById("inspectButton").disabled, false);
+});
+
+test("an invalid newer input cancels an earlier request and clears stale results", async () => {
+    const requests = [];
+    const h = harness((url) => new Promise((resolve) => requests.push({ url, resolve })));
+    const oldTask = h.submit();
+    h.document.getElementById("repoInput").value = "invalid/path/extra";
+    await h.submit();
+    requests[0].resolve({ ok: true, json: async () => sample });
+    await oldTask;
+    assert.match(h.document.getElementById("statusMessage").textContent, /owner\/repository/);
+    assert.equal(h.document.getElementById("resultContent").hidden, true);
+    assert.equal(h.document.getElementById("exportButton").hidden, true);
+    assert.equal(h.document.getElementById("inspectButton").disabled, false);
+});
+
+test("a stale network failure cannot overwrite the newer success status", async () => {
+    const requests = [];
+    const h = harness((url) => new Promise((resolve, reject) => requests.push({ url, resolve, reject })));
+    const oldTask = h.submit();
+    h.document.getElementById("repoInput").value = "new/latest";
+    const newTask = h.submit();
+    requests[1].resolve({ ok: true, json: async () => ({ ...sample, full_name: "new/latest" }) });
+    await newTask;
+    requests[0].reject(new Error("Old request failed"));
+    await oldTask;
+    assert.match(h.document.getElementById("statusMessage").textContent, /Berhasil mengambil/);
+    assert.equal(h.document.getElementById("resultContent").hidden, false);
+});

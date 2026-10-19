@@ -10,6 +10,8 @@
   const topics = document.getElementById("repoTopics");
   const exportButton = document.getElementById("exportButton");
   let exportData = null;
+  let activeRequestId = 0;
+  let activeController = null;
 
   function parseRepository(value) {
     let text = String(value || "").trim();
@@ -117,6 +119,9 @@
 
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
+    const requestId = ++activeRequestId;
+    activeController?.abort();
+    activeController = null;
     result.hidden = true;
     exportData = null;
     exportButton.hidden = true;
@@ -124,6 +129,7 @@
     try {
       parsed = parseRepository(input.value);
     } catch (error) {
+      button.disabled = false;
       setStatus(error.message, "error");
       input.focus();
       return;
@@ -131,6 +137,7 @@
     button.disabled = true;
     setStatus("Mengambil metadata publik dari GitHub...");
     const controller = new AbortController();
+    activeController = controller;
     const timeout = setTimeout(() => controller.abort(), 12000);
     try {
       const endpoint = "https://api.github.com/repos/" + encodeURIComponent(parsed.owner) + "/" + encodeURIComponent(parsed.repo);
@@ -138,6 +145,7 @@
         headers: { "Accept": "application/vnd.github+json", "X-GitHub-Api-Version": "2022-11-28" },
         signal: controller.signal
       });
+      if (requestId !== activeRequestId) return;
       if (!response.ok) {
         if (response.status === 404) throw new Error("Repository tidak ditemukan atau tidak dapat diakses secara publik.");
         if (response.status === 403 || response.status === 429) {
@@ -156,17 +164,22 @@
         throw new Error("GitHub API mengembalikan HTTP " + response.status + ". Coba lagi nanti.");
       }
       const data = await response.json();
+      if (requestId !== activeRequestId) return;
       if (!data || !data.full_name) throw new Error("Data repository dari GitHub tidak lengkap.");
       displayRepository(data, data.owner && data.owner.login || parsed.owner, data.name || parsed.repo);
       const share = new URL(window.location.href);
       share.searchParams.set("repo", data.full_name);
       window.history.replaceState(null, "", share);
     } catch (error) {
+      if (requestId !== activeRequestId) return;
       setStatus(error.name === "AbortError" ? "Permintaan terlalu lama. Coba lagi." :
         error instanceof TypeError ? "Jaringan bermasalah. Periksa koneksi dan coba lagi." : error.message, "error");
     } finally {
       clearTimeout(timeout);
-      button.disabled = false;
+      if (requestId === activeRequestId) {
+        activeController = null;
+        button.disabled = false;
+      }
     }
   });
 
