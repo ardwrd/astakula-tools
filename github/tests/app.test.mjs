@@ -11,27 +11,30 @@ function makeNode() {
         addEventListener(type, callback) { this.listeners[type] = callback; },
         replaceChildren(...children) { this.children = children; },
         append(...children) { this.children.push(...children); },
+        click() { this.clicked = true; }, remove() { this.removed = true; },
         focus() { this.focused = true; }
     };
 }
 function harness(fetch) {
     const nodes = new Map();
+    const created = [];
     const document = {
+        body: { appendChild() {} },
         getElementById(id) {
             if (!nodes.has(id)) nodes.set(id, makeNode());
             return nodes.get(id);
         },
-        createElement() { return makeNode(); }
+        createElement() { const el = makeNode(); created.push(el); return el; }
     };
     document.getElementById("repoInput").value = "ardwrd/astakula-tools";
     let changedUrl = "";
     const window = { location: { href: "https://tools.astakula.com/github/", search: "" },
         history: { replaceState(_state, _title, url) { changedUrl = String(url); } } };
-    const context = vm.createContext({ document, window, fetch, AbortController, URL, URLSearchParams,
+    const context = vm.createContext({ document, window, fetch, AbortController, URL, URLSearchParams, Blob,
         Date, Intl, Number, setTimeout, clearTimeout, encodeURIComponent });
     vm.runInContext(source, context);
     const submit = () => document.getElementById("repoForm").listeners.submit({ preventDefault() {} });
-    return { nodes, document, submit, get changedUrl() { return changedUrl; } };
+    return { nodes, document, created, submit, get changedUrl() { return changedUrl; } };
 }
 const sample = {
     full_name: "ardwrd/astakula-tools", name: "astakula-tools", owner: { login: "ardwrd" },
@@ -73,4 +76,19 @@ test("HTTP 404 and rate limits surface safe errors", async () => {
         assert.equal(h.document.getElementById("resultContent").hidden, true);
         assert.equal(h.document.getElementById("inspectButton").disabled, false);
     }
+});
+
+test("exports only selected public metadata to a browser-side JSON download", async () => {
+    const h = harness(async () => ({ ok: true, json: async () => sample }));
+    await h.submit();
+    const button = h.document.getElementById("exportButton");
+    assert.equal(button.hidden, false);
+    button.listeners.click();
+    const link = h.created.find((item) => item.download && item.clicked);
+    assert.ok(link, "download link must be clicked");
+    assert.equal(link.download, "github-ardwrd-astakula-tools.json");
+    assert.equal(link.removed, true);
+    h.document.getElementById("repoInput").value = "bad/repo/extra";
+    await h.submit();
+    assert.equal(button.hidden, true, "never export stale results after a failed search");
 });
