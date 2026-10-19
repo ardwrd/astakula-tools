@@ -133,7 +133,7 @@
 
                 <section class="legal-section" id="third-parties">
                     <div class="legal-section-heading"><span class="legal-section-number">04</span><h2>External libraries and delivery services</h2></div>
-                    <p>Some pages load browser libraries and the shared UI package from jsDelivr. Current examples include libraries used for:</p>
+                    <p>Some pages load browser libraries and the shared UI package from jsDelivr. Excel Tools, Work Schedule Generator, and Bulk Certificate Generator load SheetJS 0.20.3 from the official SheetJS CDN (<code>cdn.sheetjs.com</code>). Current examples include libraries used for:</p>
                     <ul>
                         <li>QR code rendering;</li>
                         <li>PDF processing and certificate PDF-template rendering;</li>
@@ -142,7 +142,7 @@
                         <li>spreadsheet parsing and writing, including Work Schedule Excel export and participant-list parsing; and</li>
                         <li>certificate PDF generation.</li>
                     </ul>
-                    <p>Loading those assets creates normal web requests to the external delivery service. Astakula Tools application code does not intentionally send the contents of tool inputs or locally saved schedule projects to jsDelivr.</p>
+                    <p>Loading those assets creates normal web requests to the external delivery service. Astakula Tools application code does not intentionally send tool inputs or locally saved schedule projects to jsDelivr or the SheetJS CDN.</p>
                     <p>GitHub Repository Inspector requests public repository metadata directly from the GitHub REST API at <code>api.github.com</code>. This can expose the requested repository name and standard connection data to GitHub; users do not sign in or provide a token to Astakula Tools. A shared <code>?repo=</code> link also includes the repository name in the page URL.
                     </p><p>The Bulk Certificate Generator also uses the Google Fonts API. When a user selects a supported web font, the browser requests the corresponding stylesheet and font file from Google. That request can expose standard connection data to Google. The participant spreadsheet and certificate template are not intentionally included in the Google Fonts request.</p>
                 </section>
