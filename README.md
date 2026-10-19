@@ -31,6 +31,13 @@ Most tools process user input directly in the browser. No Astakula application b
 ### QR Code Generator
 Supports URL, plain text, WhatsApp, Wi-Fi, email, phone, SMS, vCard, location, and calendar-event payloads, with PNG and SVG export.
 
+**Image to QR** offers two distinct modes:
+
+- **Embedded thumbnail:** Select a JPG, PNG, or WebP image up to 10 MB. The browser downscales and compresses it into a tiny JPEG encoded in the QR's URL fragment. Scanning opens the [image viewer](https://tools.astakula.com/qr/image/) and displays the thumbnail, not the original-resolution image. The viewer page requires an internet connection. Dense QR codes can be harder to scan.
+- **Image URL:** Generate a QR that points directly to an existing public `http://` or `https://` image URL. The original image remains hosted externally, and its availability and access permissions depend on that host.
+
+For embedded thumbnails, the source file is processed locally and is not uploaded to an Astakula backend. Anyone with the QR can view its miniature image; do not use this mode for sensitive images.
+
 ### JSON Formatter
 Supports formatting, minifying, validation, copy, download, drag-and-drop and pasted `.json` files, input/output swap, and 2/4-space indentation.
 
@@ -103,6 +110,7 @@ Converts an opaque sRGB color between HEX, RGB, HSL, HSV/HSB, arithmetic CMYK, C
 Most transformations run locally in the browser. Important exceptions or persistent browser behavior currently include:
 
 - **DNS Inspector:** sends the requested domain and record type to Cloudflare DNS-over-HTTPS.
+- **Image to QR:** embedded thumbnails are generated locally and stored in the QR URL fragment (not sent in the image-viewer HTTP request). Image URL mode directs the scanner to the external image host.
 - **Work Schedule Generator:** stores editable schedule projects in the browser's IndexedDB until site data is cleared or the projects are deleted.
 - **Theme preference:** stored in `localStorage`.
 - **Bulk Certificate Generator:** loads selected web fonts from Google Fonts; participant spreadsheets and certificate templates are processed locally.
