@@ -91,16 +91,18 @@ async function pngFixture(page, width = 160, height = 110) {
 }
 
 async function downloadedBytes(page, action) {
-  const promise = page.waitForEvent("download", { timeout: 12000 });
-  let download;
-  try {
-    await action();
-    download = await promise;
-  } catch (error) {
-    await promise.catch(() => {});
+  // Handle rejection immediately so a missing download reports the UI's error,
+  // rather than producing an unhandled rejection after the browser closes.
+  const pending = page.waitForEvent("download", { timeout: 8000 }).then(
+    download => ({ download }), error => ({ error })
+  );
+  await action();
+  const outcome = await pending;
+  if (outcome.error) {
     const status = await page.locator("#statusBox").textContent().catch(() => "");
-    throw new Error(String(error?.message || error) + " (tool status: " + status + ")");
+    throw new Error(String(outcome.error.message) + " (tool status: " + status + ")");
   }
+  const download = outcome.download;
   const dir = await mkdtemp(path.join(tmpdir(), "astakula-tool-qa-"));
   try {
     const output = path.join(dir, download.suggestedFilename());
