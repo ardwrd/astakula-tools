@@ -6,7 +6,7 @@ import vm from "node:vm";
 function node() {
     return {
         value: "", textContent: "", className: "", dataset: {},
-        classList: { toggle() {} }, addEventListener() {},
+        classList: { toggle() {} }, listeners: {}, addEventListener(type, handler) { this.listeners[type] = handler; },
         replaceChildren() {}, append() {}, appendChild() {},
         querySelector() { return node(); }
     };
@@ -35,10 +35,12 @@ vm.runInContext(readFileSync(new URL("../js/app.js", import.meta.url), "utf8"), 
 test("integer conversion rejects empty or non-decimal inputs", () => {
     const integer = document.getElementById("integerInput");
     integer.value = "";
-    vm.runInContext('document.getElementById("integerConvert").addEventListener', context);
-    // The validation happens on the button's click handler.
-    const app = readFileSync(new URL("../js/app.js", import.meta.url), "utf8");
-    assert.match(app, /if \(!\/\^\\d\+\$\/\.test\(rawInteger\)\)/);
+    document.getElementById("integerConvert").listeners.click();
+    assert.match(document.getElementById("statusBox").className, /is-error/);
+    integer.value = "4294967295";
+    document.getElementById("integerConvert").listeners.click();
+    assert.equal(document.getElementById("ipv4Input").value, "255.255.255.255");
+    assert.match(document.getElementById("statusBox").className, /is-success/);
 });
 
 test("DNS lookup rejects invalid labels and accepts ordinary hosts", () => {
