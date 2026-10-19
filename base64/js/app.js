@@ -38,6 +38,7 @@ const elements = {
 
 let currentFile = null;
 let currentFileBase64 = "";
+let fileReadRevision = 0;
 
 function setStatus(message, type = "neutral") {
     elements.statusBox.textContent = message;
@@ -292,6 +293,7 @@ function renderFileOutput() {
 }
 
 async function loadFile(file, source = "selected") {
+    const requestId = ++fileReadRevision;
     if (!file) {
         return;
     }
@@ -303,6 +305,7 @@ async function loadFile(file, source = "selected") {
 
     try {
         const buffer = await file.arrayBuffer();
+        if (requestId !== fileReadRevision) return; // A newer file or clear action won.
         currentFile = file;
         currentFileBase64 = bytesToBase64(new Uint8Array(buffer));
 
@@ -312,11 +315,12 @@ async function loadFile(file, source = "selected") {
         const verb = source === "pasted" ? "pasted and encoded" : "encoded";
         setStatus(`${file.name} ${verb}.`, "success");
     } catch {
-        setStatus("Could not read that file.", "error");
+        if (requestId === fileReadRevision) setStatus("Could not read that file.", "error");
     }
 }
 
 function clearFileEncode() {
+    fileReadRevision += 1;
     currentFile = null;
     currentFileBase64 = "";
     elements.sourceFile.value = "";
