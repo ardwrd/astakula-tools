@@ -69,8 +69,10 @@ test("rejects malformed repository names without making API calls", async () => 
 });
 
 test("HTTP 404 and rate limits surface safe errors", async () => {
-    for (const [code, word] of [[404, "tidak ditemukan"], [403, "membatasi"]]) {
-        const h = harness(async () => ({ ok: false, status: code }));
+    for (const [code, word] of [[404, "tidak ditemukan"], [403, "membatasi"], [429, "membatasi"]]) {
+        const h = harness(async () => ({ ok: false, status: code,
+            headers: { get(name) { return name === "x-ratelimit-remaining" ? "0" : null; } }
+        }));
         await h.submit();
         assert.match(h.document.getElementById("statusMessage").textContent, new RegExp(word));
         assert.equal(h.document.getElementById("resultContent").hidden, true);
@@ -91,4 +93,28 @@ test("exports only selected public metadata to a browser-side JSON download", as
     h.document.getElementById("repoInput").value = "bad/repo/extra";
     await h.submit();
     assert.equal(button.hidden, true, "never export stale results after a failed search");
+});
+
+test("distinguishes ordinary HTTP 403 from exhausted API quota", async () => {
+    const h = harness(async () => ({
+        ok: false, status: 403,
+        headers: { get(name) { return name === "x-ratelimit-remaining" ? "47" : null; } }
+    }));
+    await h.submit();
+    const message = h.document.getElementById("statusMessage").textContent;
+    assert.match(message, /ditolak GitHub \(HTTP 403\)/);
+    assert.doesNotMatch(message, /membatasi permintaan/);
+});
+
+test("rate-limit reset feedback includes time when GitHub supplies it", async () => {
+    const reset = String(Math.floor(Date.now() / 1000) + 1800);
+    const h = harness(async () => ({
+        ok: false, status: 403, headers: { get(name) {
+            if (name === "x-ratelimit-remaining") return "0";
+            if (name === "x-ratelimit-reset") return reset;
+            return null;
+        } }
+    }));
+    await h.submit();
+    assert.match(h.document.getElementById("statusMessage").textContent, /Coba kembali setelah/);
 });

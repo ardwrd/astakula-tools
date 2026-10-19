@@ -141,7 +141,17 @@
       if (!response.ok) {
         if (response.status === 404) throw new Error("Repository tidak ditemukan atau tidak dapat diakses secara publik.");
         if (response.status === 403 || response.status === 429) {
-          throw new Error("GitHub membatasi permintaan API saat ini. Coba lagi nanti (akses publik tanpa token memiliki rate limit).");
+          const remaining = response.headers?.get("x-ratelimit-remaining");
+          if (response.status === 429 || remaining === "0") {
+            const resetSeconds = Number(response.headers?.get("x-ratelimit-reset"));
+            const resetHint = Number.isFinite(resetSeconds) && resetSeconds * 1000 > Date.now()
+              ? " Coba kembali setelah " + new Intl.DateTimeFormat("id-ID", {
+                  hour: "2-digit", minute: "2-digit", timeZoneName: "short"
+                }).format(new Date(resetSeconds * 1000)) + "."
+              : " Coba lagi nanti.";
+            throw new Error("GitHub membatasi permintaan API tanpa autentikasi." + resetHint);
+          }
+          throw new Error("Permintaan ditolak GitHub (HTTP 403). Repository mungkin dibatasi atau akses sedang ditolak.");
         }
         throw new Error("GitHub API mengembalikan HTTP " + response.status + ". Coba lagi nanti.");
       }
