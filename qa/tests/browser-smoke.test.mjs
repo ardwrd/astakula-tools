@@ -110,8 +110,9 @@ test("Excel: import XLSX, render a preview and export CSV with actual cells", as
       const sheet = XLSX.utils.aoa_to_sheet([["Nama", "Jumlah"], ["Pelanggan A", 13], ["Pelanggan B", 21]]);
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, sheet, "Data");
-      return Array.from(XLSX.write(wb, { bookType: "xlsx", type: "array" }));
+      return Array.from(new Uint8Array(XLSX.write(wb, { bookType: "xlsx", type: "array" })));
     });
+    assert.ok(content.length > 1000, "Expected non-empty XLSX binary fixture");
     await page.locator("#sourceInput").setInputFiles({
       name: "report.xlsx", mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", buffer: Buffer.from(content)
     });
