@@ -122,7 +122,7 @@ Most transformations run locally in the browser. Important exceptions or persist
 - **Theme preference:** stored in `localStorage`.
 - **Bulk Certificate Generator:** loads selected web fonts from Google Fonts; participant spreadsheets and certificate templates are processed locally.
 - **Color Palette Generator:** source images and generated palettes are processed locally in the browser and are not stored by an Astakula backend.
-- **CDN libraries:** several tools load browser libraries from jsDelivr. Loading those assets creates normal requests to jsDelivr, but Astakula application code does not intentionally send tool-input contents to the CDN.
+- **CDN libraries:** several tools load browser libraries from jsDelivr, while SheetJS is loaded from its official CDN. Loading those assets creates normal requests to jsDelivr, but Astakula application code does not intentionally send tool-input contents to the CDN.
 
 See `/privacy/` for the public Privacy Policy.
 
@@ -143,7 +143,7 @@ Current browser-side libraries include:
 - `pdfjs-dist@4.10.38` for rendering the first page of an uploaded PDF certificate template.
 - `gifenc@1.0.3` for GIF encoding.
 - `jszip@3.10.1` for ZIP creation.
-- `xlsx@0.18.5` for spreadsheet parsing/writing.
+- SheetJS CE 0.20.3 for spreadsheet parsing/writing, loaded from its official CDN (`cdn.sheetjs.com`) instead of the vulnerable `xlsx@0.18.5` npm package. Do not roll back to the older jsDelivr build.
 - `jspdf@2.5.2` for certificate PDF export.
 - Google Fonts API for fonts selected inside Bulk Certificate Generator.
 
