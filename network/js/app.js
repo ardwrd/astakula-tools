@@ -100,7 +100,9 @@ function subnetData(ipValue, prefixValue) {
 
 function calculateSubnet() {
     try {
-        const data = subnetData($("subnetIp").value, Number($("subnetCidr").value));
+        const prefixInput = $("subnetCidr").value.trim();
+        if (!/^\d{1,2}$/.test(prefixInput)) throw new Error("Enter a CIDR prefix from 0 to 32.");
+        const data = subnetData($("subnetIp").value, Number(prefixInput));
         renderResults($("subnetResults"), [
             ["Network", `${intToIPv4(data.network)}/${data.prefix}`],
             ["Subnet mask", intToIPv4(data.mask)],
@@ -195,7 +197,9 @@ function calculateSplit() {
     const tbody = $("splitTable").querySelector("tbody");
     try {
         const source = parseNetwork($("splitNetwork").value);
-        const target = Number($("splitTarget").value);
+        const targetInput = $("splitTarget").value.trim();
+        if (!/^\d{1,2}$/.test(targetInput)) throw new Error("Enter a target CIDR prefix.");
+        const target = Number(targetInput);
         if (!Number.isInteger(target) || target < source.prefix || target > 32) throw new Error(`Target prefix must be between /${source.prefix} and /32.`);
         const subnetCount = 2 ** (target - source.prefix);
         if (subnetCount > 4096) throw new Error("That split creates more than 4,096 subnets. Choose a smaller target prefix.");
@@ -255,7 +259,9 @@ $("ipv4Convert").addEventListener("click", () => {
 
 $("integerConvert").addEventListener("click", () => {
     try {
-        const ipText = intToIPv4(Number($("integerInput").value.trim()));
+        const rawInteger = $("integerInput").value.trim();
+        if (!/^\d+$/.test(rawInteger)) throw new Error("Enter a decimal IPv4 integer.");
+        const ipText = intToIPv4(Number(rawInteger));
         $("ipv4Input").value = ipText;
         renderIPv4(parseIPv4(ipText));
         setStatus("Integer converted to IPv4.", "success");
@@ -266,8 +272,9 @@ let normalizedMac = "";
 function normalizeMac() {
     try {
         const raw = $("macInput").value.trim();
-        const clean = raw.replace(/[^0-9a-f]/gi, "");
-        if (!/^[0-9a-f]{12}$/i.test(clean)) throw new Error("Enter a valid 48-bit MAC address.");
+        const validMac = /^(?:[0-9a-f]{12}|(?:[0-9a-f]{2}:){5}[0-9a-f]{2}|(?:[0-9a-f]{2}-){5}[0-9a-f]{2}|(?:[0-9a-f]{4}\.){2}[0-9a-f]{4})$/i;
+        if (!validMac.test(raw)) throw new Error("Enter a valid 48-bit MAC address.");
+        const clean = raw.replace(/[:.\-]/g, "");
         const lower = clean.toLowerCase();
         const upper = clean.toUpperCase();
         const format = $("macFormat").value;
@@ -431,7 +438,10 @@ const dnsTypes = { 1: "A", 2: "NS", 5: "CNAME", 6: "SOA", 15: "MX", 16: "TXT", 2
 function normalizeDomain(value) {
     let domain = String(value).trim().toLowerCase();
     domain = domain.replace(/^https?:\/\//, "").split("/")[0].replace(/\.$/, "");
-    if (!domain || domain.length > 253 || !/^[a-z0-9.-]+$/i.test(domain)) throw new Error("Enter a valid domain name.");
+    const labels = domain.split(".");
+    if (!domain || domain.length > 253 || labels.some((label) => label.length > 63 || !/^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$/.test(label))) {
+        throw new Error("Enter a valid domain name.");
+    }
     return domain;
 }
 
