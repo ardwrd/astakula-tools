@@ -363,6 +363,16 @@ function verifyHash() {
         return;
     }
 
+
+    const expectedLengths = { MD5: 32, "SHA-1": 40, "SHA-256": 64, "SHA-384": 96, "SHA-512": 128 };
+    const expectedLength = expectedLengths[elements.algorithmSelect.value];
+    if (!/^[0-9a-f]+$/.test(expected) || expected.length !== expectedLength) {
+        elements.verifyResult.textContent = "Expected " + expectedLength + " hexadecimal characters for " + elements.algorithmSelect.value + ".";
+        elements.verifyResult.className = "verify-result is-mismatch";
+        setStatus("Expected hash has an invalid format or length.", "error");
+        return;
+    }
+
     const matches = actual === expected;
 
     elements.verifyResult.textContent = matches
@@ -424,6 +434,7 @@ elements.clearButton.addEventListener("click", clearAll);
 elements.copyButton.addEventListener("click", copyHash);
 elements.downloadButton.addEventListener("click", downloadHash);
 elements.verifyButton.addEventListener("click", verifyHash);
+elements.expectedHash.addEventListener("input", clearVerification);
 
 elements.textInput.addEventListener("input", () => {
     updateTextMeta();
