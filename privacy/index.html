@@ -71,7 +71,7 @@
                     <a href="#contact">Contact</a>
                 </nav>
                 <div class="legal-toc-meta">
-                    <div><strong>Effective date</strong>October 3, 2026</div>
+                    <div><strong>Effective date</strong>October 19, 2026</div>
                     <div><strong>Developer</strong>Ariyo Ardiwardana</div>
                     <div><strong>Parent brand</strong>Astakula</div>
                 </div>
@@ -88,7 +88,7 @@
                         </div>
                         <div class="legal-summary-item">
                             <span>External lookups</span>
-                            <strong>DNS Inspector uses Cloudflare DNS-over-HTTPS; Certificate Generator can load selected fonts from Google Fonts.</strong>
+                            <strong>DNS Inspector uses Cloudflare DNS-over-HTTPS; GitHub Inspector calls GitHub REST API; Certificate Generator can load fonts from Google Fonts.</strong>
                         </div>
                         <div class="legal-summary-item">
                             <span>Browser storage</span>
@@ -117,6 +117,7 @@
                                 <tr><td>Bulk Certificate Generator</td><td>Browser</td><td>Template and participant data stay in the browser; selected font families are requested from Google Fonts</td></tr>
                                 <tr><td>Subnet, range, IPv4, MAC, bandwidth, port reference</td><td>Browser</td><td>No external lookup required for the calculation itself</td></tr>
                                 <tr><td>DNS Inspector</td><td>Browser + public resolver</td><td>Requested domain and record type are sent to Cloudflare DNS-over-HTTPS</td></tr>
+                                <tr><td>GitHub Repository Inspector</td><td>Browser + GitHub REST API</td><td>Requested public repository name is sent directly to api.github.com. The tool reads only public metadata and uses no API token. Shared links may include the repository name in the URL.</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -142,7 +143,8 @@
                         <li>certificate PDF generation.</li>
                     </ul>
                     <p>Loading those assets creates normal web requests to the external delivery service. Astakula Tools application code does not intentionally send the contents of tool inputs or locally saved schedule projects to jsDelivr.</p>
-                    <p>The Bulk Certificate Generator also uses the Google Fonts API. When a user selects a supported web font, the browser requests the corresponding stylesheet and font file from Google. That request can expose standard connection data to Google. The participant spreadsheet and certificate template are not intentionally included in the Google Fonts request.</p>
+                    <p>GitHub Repository Inspector requests public repository metadata directly from the GitHub REST API at <code>api.github.com</code>. This can expose the requested repository name and standard connection data to GitHub; users do not sign in or provide a token to Astakula Tools. A shared <code>?repo=</code> link also includes the repository name in the page URL.
+                    </p><p>The Bulk Certificate Generator also uses the Google Fonts API. When a user selects a supported web font, the browser requests the corresponding stylesheet and font file from Google. That request can expose standard connection data to Google. The participant spreadsheet and certificate template are not intentionally included in the Google Fonts request.</p>
                 </section>
 
                 <section class="legal-section" id="connection-data">

@@ -25,6 +25,7 @@ Most tools process user input directly in the browser. No Astakula application b
 | Work Schedule Generator | `/schedule/` | Build monthly staff schedules, record requested days off, validate assignments, and export Excel |
 | Bulk Certificate Generator | `/certificate/` | Merge a finished certificate design with spreadsheet participant data and generate certificates in bulk |
 | Color Palette Generator | `/color/` | Generate interactive OKLCH-based palettes, lock/reorder colors, extract from images, and inspect color systems |
+| GitHub Repository Inspector | `/github/` | Inspect public repository metadata using GitHub REST API without sign-in |
 
 ## Tool details
 
@@ -105,11 +106,17 @@ Route: `/color/convert/`
 
 Converts an opaque sRGB color between HEX, RGB, HSL, HSV/HSB, arithmetic CMYK, CIE XYZ D65, Oklab, and OKLCH. It accepts HEX plus common CSS-style `rgb()`, `hsl()`, `oklab()`, and `oklch()` input, provides relative luminance and black/white contrast inspection, generates OKLCH-based tints and shades, exposes shareable `?color=` URLs, and links directly into the full Contrast Checker. CMYK output is a simple mathematical conversion rather than ICC/profile-managed print color.
 
+### GitHub Repository Inspector
+Route: `/github/`
+
+A read-only public repository lookup using GitHub's REST endpoint `GET https://api.github.com/repos/{owner}/{repo}`. Enter `owner/repository` or a GitHub repository URL to view stars, forks, open issues (GitHub's total can include pull requests), language, license, default branch, last push, and topics. The tool does not require user authentication, request a personal access token, access private repositories, or store query results on an Astakula backend. Public unauthenticated API rate limits apply.
+
 ## Privacy and data flow
 
 Most transformations run locally in the browser. Important exceptions or persistent browser behavior currently include:
 
 - **DNS Inspector:** sends the requested domain and record type to Cloudflare DNS-over-HTTPS.
+- **GitHub Repository Inspector:** sends the requested public repository path to GitHub REST API from the browser. Shared `?repo=` links expose the repository name in the browser URL; no authentication or Astakula application backend is used.
 - **Image to QR:** embedded thumbnails are generated locally and stored in the QR URL fragment (not sent in the image-viewer HTTP request). Image URL mode directs the scanner to the external image host.
 - **Work Schedule Generator:** stores editable schedule projects in the browser's IndexedDB until site data is cleared or the projects are deleted.
 - **Theme preference:** stored in `localStorage`.
