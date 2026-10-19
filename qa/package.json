@@ -1,0 +1,14 @@
+{
+  "name": "@astakula/cross-tool-qa",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "test:browser": "node --test tests/browser-smoke.test.mjs"
+  },
+  "devDependencies": {
+    "playwright": "1.55.0",
+    "jszip": "3.10.1",
+    "jspdf": "2.5.2"
+  }
+}

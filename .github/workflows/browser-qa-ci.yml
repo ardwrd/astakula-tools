@@ -1,0 +1,36 @@
+name: Browser QA Excel Image Certificate
+on:
+  pull_request:
+    paths:
+      - "excel/**"
+      - "image/**"
+      - "certificate/**"
+      - "assets/**"
+      - "qa/**"
+      - ".github/workflows/browser-qa-ci.yml"
+  push:
+    branches: [main]
+    paths:
+      - "excel/**"
+      - "image/**"
+      - "certificate/**"
+      - "assets/**"
+      - "qa/**"
+      - ".github/workflows/browser-qa-ci.yml"
+permissions:
+  contents: read
+jobs:
+  browser-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: qa
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm install --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:browser
