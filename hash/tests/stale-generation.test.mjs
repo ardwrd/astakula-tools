@@ -60,3 +60,38 @@ test("discard pending digest when algorithm changes", async () => {
     await pending;
     assert.equal(h.el("#hashOutput").value, "");
 });
+
+
+test("valid SHA-256 digest matches regardless of hex letter case or paste spacing", async () => {
+    const h = createHarness(webcrypto.subtle);
+    h.el("#textInput").value = "abc";
+    await vm.runInContext("generateHash()", h.context);
+    h.el("#expectedHash").value = "BA7816BF8F01CFEA414140DE5DAE2223B00361A396177A9CB410FF61F20015AD";
+    h.el("#verifyButton").listeners.click();
+    assert.match(h.el("#verifyResult").textContent, /Match/);
+    assert.match(h.el("#verifyResult").className, /is-match/);
+});
+
+test("rejects wrong-length and non-hex expected hashes before comparing", async () => {
+    const h = createHarness(webcrypto.subtle);
+    h.el("#textInput").value = "abc";
+    await vm.runInContext("generateHash()", h.context);
+    for (const value of ["not-a-digest", "a".repeat(32), "g".repeat(64)]) {
+        h.el("#expectedHash").value = value;
+        h.el("#verifyButton").listeners.click();
+        assert.match(h.el("#verifyResult").textContent, /64 hexadecimal characters/);
+        assert.match(h.el("#statusBox").className, /is-error/);
+    }
+});
+
+test("editing the expected digest clears a previous Match status", async () => {
+    const h = createHarness(webcrypto.subtle);
+    h.el("#textInput").value = "abc";
+    await vm.runInContext("generateHash()", h.context);
+    h.el("#expectedHash").value = h.el("#hashOutput").value;
+    h.el("#verifyButton").listeners.click();
+    assert.match(h.el("#verifyResult").textContent, /Match/);
+    h.el("#expectedHash").value = "changed";
+    h.el("#expectedHash").listeners.input();
+    assert.equal(h.el("#verifyResult").textContent, "No comparison yet.");
+});
