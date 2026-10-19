@@ -57,6 +57,7 @@ let sourceFile = null;
 let workbook = null;
 let activeSheetName = "";
 let duplicateRows = new Set();
+let loadSequence = 0;
 
 function formatBytes(bytes) {
     if (!Number.isFinite(bytes) || bytes <= 0) return "0 B";
@@ -151,8 +152,10 @@ async function readWorkbookFile(file) {
 }
 
 async function loadSource(file) {
+    const sequence = ++loadSequence;
     setStatus(`Reading ${file.name}…`, "working");
     const parsed = await readWorkbookFile(file);
+    if (sequence !== loadSequence) return false; // A newer file or Remove takes precedence.
     if (!parsed.SheetNames?.length) throw new Error("This file does not contain a readable sheet.");
 
     sourceFile = file;
@@ -167,19 +170,21 @@ async function loadSource(file) {
     populateSheetSelect();
     updateWorkspace();
     setStatus(`${file.name} loaded.`, "success");
+    return true;
 }
 
 async function resetWorkbook() {
     if (!sourceFile) return;
+    const sequence = loadSequence + 1;
     try {
-        await loadSource(sourceFile);
-        setStatus("Workbook reset to the original file.", "success");
+        if (await loadSource(sourceFile)) setStatus("Workbook reset to the original file.", "success");
     } catch (error) {
-        setStatus(error.message, "error");
+        if (sequence === loadSequence) setStatus(error.message, "error");
     }
 }
 
 function removeSource() {
+    loadSequence += 1; // Invalidate any pending asynchronous read.
     sourceFile = null;
     workbook = null;
     activeSheetName = "";
@@ -566,9 +571,10 @@ function removeDuplicates() {
 }
 
 async function handleIncomingFile(file) {
+    const sequence = loadSequence + 1;
     try { await loadSource(file); }
-    catch (error) { setStatus(error.message, "error"); }
-    finally { elements.sourceInput.value = ""; }
+    catch (error) { if (sequence === loadSequence) setStatus(error.message, "error"); }
+    finally { if (sequence === loadSequence) elements.sourceInput.value = ""; }
 }
 
 function extractPastedFile(event) {
