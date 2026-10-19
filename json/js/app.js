@@ -1,4 +1,6 @@
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
+let inputRevision = 0;
+let fileReadRevision = 0;
 
 const elements = {
     input: document.querySelector("#jsonInput"),
@@ -167,6 +169,7 @@ function swapInputOutput() {
 
     const inputValue = elements.input.value;
 
+    inputRevision += 1;
     elements.input.value = outputValue;
     elements.output.value = inputValue;
     elements.fileInput.value = "";
@@ -177,6 +180,7 @@ function swapInputOutput() {
 }
 
 function clearAll() {
+    inputRevision += 1;
     elements.input.value = "";
     elements.output.value = "";
     elements.fileInput.value = "";
@@ -186,6 +190,7 @@ function clearAll() {
 }
 
 function loadSample() {
+    inputRevision += 1;
     elements.input.value = JSON.stringify(SAMPLE_JSON, null, 2);
     elements.output.value = "";
     elements.fileInput.value = "";
@@ -271,8 +276,15 @@ async function loadFile(file, source = "selected") {
         return false;
     }
 
+    const requestId = ++fileReadRevision;
+    const initialInputRevision = inputRevision;
     try {
-        elements.input.value = await file.text();
+        const contents = await file.text();
+        if (requestId !== fileReadRevision || inputRevision !== initialInputRevision) {
+            return false; // A newer file or user edit takes precedence.
+        }
+        inputRevision += 1;
+        elements.input.value = contents;
         elements.output.value = "";
         elements.fileInput.value = "";
 
@@ -322,7 +334,10 @@ elements.sampleButton.addEventListener("click", loadSample);
 elements.copyButton.addEventListener("click", copyOutput);
 elements.downloadButton.addEventListener("click", downloadOutput);
 
-elements.input.addEventListener("input", updateMeta);
+elements.input.addEventListener("input", () => {
+    inputRevision += 1;
+    updateMeta();
+});
 elements.output.addEventListener("input", updateMeta);
 
 elements.fileInput.addEventListener("change", () => {
