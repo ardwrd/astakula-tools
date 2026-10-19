@@ -75,18 +75,45 @@ function generateV4() {
     return bytesToUuid(bytes);
 }
 
-function generateV7() {
-    const bytes = secureRandomBytes(16);
-    let timestamp = BigInt(Date.now());
+// Keep UUIDv7 values lexically ordered within the same millisecond (RFC 9562).
+let lastV7Timestamp = -1;
+let lastV7Bytes = null;
 
-    for (let index = 5; index >= 0; index -= 1) {
-        bytes[index] = Number(timestamp & 0xffn);
-        timestamp >>= 8n;
+function generateV7() {
+    let timestamp = Math.max(Date.now(), lastV7Timestamp);
+    let bytes;
+
+    if (timestamp === lastV7Timestamp && lastV7Bytes) {
+        bytes = lastV7Bytes.slice();
+        let overflow = true;
+        // Increment only the 74 random bits, preserving version and variant.
+        for (let index = 15; index >= 6; index -= 1) {
+            const mask = index === 8 ? 0x3f : index === 6 ? 0x0f : 0xff;
+            const part = bytes[index] & mask;
+            bytes[index] = (bytes[index] & ~mask) | ((part + 1) & mask);
+            if (part < mask) {
+                overflow = false;
+                break;
+            }
+        }
+        if (overflow) {
+            timestamp = lastV7Timestamp + 1;
+            bytes = secureRandomBytes(16);
+        }
+    } else {
+        bytes = secureRandomBytes(16);
     }
 
+    let time = BigInt(timestamp);
+    for (let index = 5; index >= 0; index -= 1) {
+        bytes[index] = Number(time & 0xffn);
+        time >>= 8n;
+    }
     bytes[6] = (bytes[6] & 0x0f) | 0x70;
     bytes[8] = (bytes[8] & 0x3f) | 0x80;
 
+    lastV7Timestamp = timestamp;
+    lastV7Bytes = bytes.slice();
     return bytesToUuid(bytes);
 }
 
