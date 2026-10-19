@@ -23,7 +23,8 @@ const elements = {
     downloadButton: document.querySelector("#downloadButton"),
     expectedHash: document.querySelector("#expectedHash"),
     verifyButton: document.querySelector("#verifyButton"),
-    verifyResult: document.querySelector("#verifyResult")
+    verifyResult: document.querySelector("#verifyResult"),
+    algorithmSecurityNote: document.querySelector("#algorithmSecurityNote")
 };
 
 let activeMode = "text";
@@ -71,7 +72,11 @@ function updateTextMeta() {
 }
 
 function updateResultMeta() {
-    elements.resultMeta.textContent = elements.algorithmSelect.value;
+    const algorithm = elements.algorithmSelect.value;
+    elements.resultMeta.textContent = algorithm;
+    elements.algorithmSecurityNote.textContent = ["MD5", "SHA-1"].includes(algorithm)
+        ? algorithm + " hanya untuk kompatibilitas legacy: tidak aman terhadap collision dan tidak boleh digunakan untuk verifikasi keaslian berbasis keamanan."
+        : "SHA-256, SHA-384, dan SHA-512 lebih sesuai untuk pemeriksaan integritas modern.";
 }
 
 function formatDigest(value) {
