@@ -8,6 +8,8 @@
   const result = document.getElementById("resultContent");
   const metrics = document.getElementById("repoMetrics");
   const topics = document.getElementById("repoTopics");
+  const exportButton = document.getElementById("exportButton");
+  let exportData = null;
 
   function parseRepository(value) {
     let text = String(value || "").trim();
@@ -78,6 +80,21 @@
       tag.textContent = label;
       topics.append(tag);
     }
+    // Export only the public fields displayed by this read-only tool.
+    exportData = {
+      repository: data.full_name || owner + "/" + repo,
+      description: data.description || null,
+      stars: Number(data.stargazers_count) || 0,
+      forks: Number(data.forks_count) || 0,
+      open_issues_including_pull_requests: Number(data.open_issues_count) || 0,
+      language: data.language || null,
+      license: data.license ? (data.license.spdx_id || data.license.name) : null,
+      default_branch: data.default_branch || null,
+      pushed_at: data.pushed_at || null,
+      visibility: data.visibility || "public",
+      topics: Array.isArray(data.topics) ? data.topics.filter((item) => typeof item === "string") : []
+    };
+    exportButton.hidden = false;
     document.getElementById("repoLink").href = repositoryUrl;
     document.getElementById("issuesLink").href = repositoryUrl + "/issues";
     document.getElementById("pullsLink").href = repositoryUrl + "/pulls";
@@ -85,9 +102,24 @@
     setStatus("Berhasil mengambil metadata repository publik dari GitHub API.", "success");
   }
 
+  exportButton.addEventListener("click", () => {
+    if (!exportData) return;
+    const blob = new Blob([JSON.stringify(exportData, null, 2) + "\n"], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = "github-" + exportData.repository.replace(/[^a-z0-9._-]+/gi, "-") + ".json";
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  });
+
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     result.hidden = true;
+    exportData = null;
+    exportButton.hidden = true;
     let parsed;
     try {
       parsed = parseRepository(input.value);

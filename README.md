@@ -109,7 +109,7 @@ Converts an opaque sRGB color between HEX, RGB, HSL, HSV/HSB, arithmetic CMYK, C
 ### GitHub Repository Inspector
 Route: `/github/`
 
-A read-only public repository lookup using GitHub's REST endpoint `GET https://api.github.com/repos/{owner}/{repo}`. Enter `owner/repository` or a GitHub repository URL to view stars, forks, open issues (GitHub's total can include pull requests), language, license, default branch, last push, and topics. The tool does not require user authentication, request a personal access token, access private repositories, or store query results on an Astakula backend. Public unauthenticated API rate limits apply.
+A read-only public repository lookup with browser-side JSON export using GitHub's REST endpoint `GET https://api.github.com/repos/{owner}/{repo}`. Enter `owner/repository` or a GitHub repository URL to view stars, forks, open issues (GitHub's total can include pull requests), language, license, default branch, last push, and topics. The tool does not require user authentication, request a personal access token, access private repositories, or store query results on an Astakula backend. Public unauthenticated API rate limits apply.
 
 ## Privacy and data flow
 
