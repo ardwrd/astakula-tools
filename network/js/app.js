@@ -439,6 +439,8 @@ function renderPorts(filter = "") {
 $("portSearch").addEventListener("input", (event) => renderPorts(event.target.value));
 
 const dnsTypes = { 1: "A", 2: "NS", 5: "CNAME", 6: "SOA", 15: "MX", 16: "TXT", 28: "AAAA" };
+let dnsRequestRevision = 0;
+let activeDnsController = null;
 
 function normalizeDomain(value) {
     let domain = String(value).trim().toLowerCase();
@@ -451,12 +453,16 @@ function normalizeDomain(value) {
 }
 
 async function dnsLookup() {
+    const requestId = ++dnsRequestRevision;
+    activeDnsController?.abort();
+    activeDnsController = null;
     const tbody = $("dnsTable").querySelector("tbody");
     try {
         const domain = normalizeDomain($("dnsDomain").value);
         const type = $("dnsType").value;
         setStatus(`Looking up ${type} records for ${domain}...`, "working");
         const controller = new AbortController();
+        activeDnsController = controller;
         const timer = setTimeout(() => controller.abort(), 10000);
         let response;
         try {
@@ -467,8 +473,10 @@ async function dnsLookup() {
         } finally {
             clearTimeout(timer);
         }
+        if (requestId !== dnsRequestRevision) return;
         if (!response.ok) throw new Error(`DNS resolver returned HTTP ${response.status}.`);
         const data = await response.json();
+        if (requestId !== dnsRequestRevision) return;
         const answers = Array.isArray(data.Answer) ? data.Answer : [];
         const rows = answers.map((answer) => {
             const tr = document.createElement("tr");
@@ -490,10 +498,13 @@ async function dnsLookup() {
         else if (!answers.length) setStatus(`No ${type} answers returned for ${domain}.`, "success");
         else setStatus(`Found ${answers.length} ${type} record${answers.length === 1 ? "" : "s"}.`, "success");
     } catch (error) {
+        if (requestId !== dnsRequestRevision) return;
         tbody.replaceChildren();
         $("dnsMeta").replaceChildren();
         const message = error.name === "AbortError" ? "DNS lookup timed out." : error.message;
         setStatus(message, "error");
+    } finally {
+        if (requestId === dnsRequestRevision) activeDnsController = null;
     }
 }
 
