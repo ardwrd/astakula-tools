@@ -91,9 +91,16 @@ async function pngFixture(page, width = 160, height = 110) {
 }
 
 async function downloadedBytes(page, action) {
-  const promise = page.waitForEvent("download", { timeout: 45000 });
-  await action();
-  const download = await promise;
+  const promise = page.waitForEvent("download", { timeout: 12000 });
+  let download;
+  try {
+    await action();
+    download = await promise;
+  } catch (error) {
+    await promise.catch(() => {});
+    const status = await page.locator("#statusBox").textContent().catch(() => "");
+    throw new Error(String(error?.message || error) + " (tool status: " + status + ")");
+  }
   const dir = await mkdtemp(path.join(tmpdir(), "astakula-tool-qa-"));
   try {
     const output = path.join(dir, download.suggestedFilename());
