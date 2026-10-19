@@ -127,6 +127,7 @@ test("Excel: import XLSX, render a preview and export CSV with actual cells", as
     });
     await page.waitForFunction(() => document.querySelector("#fileName")?.textContent === "report.xlsx");
     assert.match(await page.locator("#previewTable").innerText(), /Pelanggan B/);
+    await page.locator('[data-mode="convert"]').click();
     const result = await downloadedBytes(page, () => page.locator("#exportCsvButton").click());
     assert.match(result.filename, /\.csv$/);
     assert.match(result.bytes.toString("utf8"), /Pelanggan A,13/);
