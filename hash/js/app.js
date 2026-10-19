@@ -29,6 +29,7 @@ const elements = {
 let activeMode = "text";
 let currentFile = null;
 let rawDigest = "";
+let generationRevision = 0;
 
 function setStatus(message, type = "neutral") {
     elements.statusBox.textContent = message;
@@ -90,6 +91,7 @@ function renderDigest() {
 }
 
 function clearResult(clearExpected = true) {
+    generationRevision += 1;
     rawDigest = "";
     elements.hashOutput.value = "";
 
@@ -244,6 +246,7 @@ async function digestBytes(bytes, algorithm) {
 
 async function generateHash() {
     const algorithm = elements.algorithmSelect.value;
+    const requestId = ++generationRevision;
 
     try {
         elements.generateButton.disabled = true;
@@ -253,7 +256,9 @@ async function generateHash() {
             ? await getFileBytes()
             : getTextBytes();
 
-        rawDigest = await digestBytes(bytes, algorithm);
+        const computedDigest = await digestBytes(bytes, algorithm);
+        if (requestId !== generationRevision) return; // Editor changed during async hashing.
+        rawDigest = computedDigest;
         renderDigest();
         updateResultMeta();
 
@@ -263,6 +268,7 @@ async function generateHash() {
 
         setStatus(`${algorithm} hash generated for ${sourceLabel}.`, "success");
     } catch (error) {
+        if (requestId !== generationRevision) return;
         clearResult(false);
         setStatus(error.message, "error");
     } finally {
