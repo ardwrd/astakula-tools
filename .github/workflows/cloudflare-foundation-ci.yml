@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - feature/cloudflare-foundation
+      - main
     paths:
       - "backend/**"
       - "pdf/**"
@@ -16,6 +17,9 @@ on:
       - "assets/js/theme.js"
       - "sitemap.xml"
       - ".github/workflows/cloudflare-foundation-ci.yml"
+
+permissions:
+  contents: read
 
 jobs:
   api-free:
