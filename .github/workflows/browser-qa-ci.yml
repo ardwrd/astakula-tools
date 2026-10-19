@@ -35,3 +35,11 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - run: node --test ../excel/tests/*.test.mjs
       - run: npm run test:browser
+      - name: Upload mobile QA screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: astakula-tools-mobile-qa
+          path: qa/artifacts/*.png
+          if-no-files-found: ignore
+          retention-days: 7

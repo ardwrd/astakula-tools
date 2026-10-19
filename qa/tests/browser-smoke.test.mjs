@@ -1,7 +1,7 @@
 import test, { before, after } from "node:test";
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
-import { readFile, mkdtemp, rm } from "node:fs/promises";
+import { readFile, mkdtemp, rm, mkdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -177,20 +177,48 @@ test("Certificate: image template, sample data, dynamic field and PNG ZIP batch"
   } finally { await page.close(); }
 });
 
+
 for (const name of ["excel", "image", "certificate"]) {
-  test(name + ": mobile 375px has no page-level horizontal overflow", async () => {
-    const { page, errors } = await openTool(name, {
-      viewport: { width: 375, height: 812 }, isMobile: true, hasTouch: true
+  for (const width of [320, 375, 768]) {
+    test(name + ": populated workspace fits " + width + "px screen", async () => {
+      const { page, errors } = await openTool(name, {
+        viewport: { width, height: 820 }, isMobile: width < 768, hasTouch: width < 768
+      });
+      try {
+        if (name === "excel") {
+          const csv = Buffer.from("Nama,Jumlah\nPeserta A,10\nPeserta B,20\n");
+          await page.locator("#sourceInput").setInputFiles({
+            name: "fixture.csv", mimeType: "text/csv", buffer: csv
+          });
+          await page.waitForFunction(() => document.querySelector("#fileName")?.textContent === "fixture.csv");
+          assert.match(await page.locator("#previewTable").innerText(), /Peserta B/);
+        } else if (name === "image") {
+          const png = await pngFixture(page);
+          await page.locator("#imageInput").setInputFiles({
+            name: "fixture.png", mimeType: "image/png", buffer: png
+          });
+          await page.locator("#queuePanel").waitFor({ state: "visible" });
+        } else {
+          const png = await pngFixture(page, 400, 260);
+          await page.locator("#templateInput").setInputFiles({
+            name: "template.png", mimeType: "image/png", buffer: png
+          });
+          await page.waitForFunction(() => document.querySelector("#templateState")?.textContent === "Ready");
+          await page.locator("#sampleButton").click();
+          await page.locator("#editorSection").waitFor({ state: "visible" });
+          await page.locator('#fieldButtons [data-add-field="Name"]').click();
+        }
+        const layout = await page.evaluate(() => ({
+          viewport: window.innerWidth,
+          page: document.documentElement.scrollWidth,
+          body: document.body.scrollWidth
+        }));
+        assert.ok(layout.page <= layout.viewport + 2, JSON.stringify(layout));
+        assert.ok(layout.body <= layout.viewport + 2, JSON.stringify(layout));
+        await mkdir(path.join(qaDir, "artifacts"), { recursive: true });
+        await page.screenshot({ path: path.join(qaDir, "artifacts", name + "-loaded-" + width + ".png"), fullPage: true });
+        assert.deepEqual(errors, []);
+      } finally { await page.close(); }
     });
-    try {
-      const layout = await page.evaluate(() => ({
-        viewport: window.innerWidth,
-        page: document.documentElement.scrollWidth,
-        body: document.body.scrollWidth
-      }));
-      assert.ok(layout.page <= layout.viewport + 2, JSON.stringify(layout));
-      assert.ok(layout.body <= layout.viewport + 2, JSON.stringify(layout));
-      assert.deepEqual(errors, []);
-    } finally { await page.close(); }
-  });
+  }
 }
