@@ -14,7 +14,7 @@ const esc = vm.runInNewContext(section('function esc(v)','function syncInputs')+
 function stubElement(){return {innerHTML:'',querySelectorAll(){return []}}}
 function makeContext({employees=[],shifts=[],projects=[]}={}) {
   const els={employeeList:stubElement(),shiftList:stubElement(),scheduleWrap:stubElement(),historyList:stubElement()};
-  const state={month:'2026-10',employees,shifts,schedule:{},rules:{maxConsecutive:6,maxNight:2}};
+  const state={month:'2026-10',employees,shifts,schedule:{},warnings:[],rules:{maxConsecutive:6,maxNight:2}};
   const ctx=vm.createContext({state,els,esc,
     datesInMonth:()=>['2026-10-01'],dateInfo:()=>({day:1,weekday:'Thu',isWeekend:false}),
     requestFor:()=>null,employeeStats:()=>({work:0,off:1,requested:0,hours:0,byShift:{}}),
