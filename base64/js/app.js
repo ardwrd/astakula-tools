@@ -135,8 +135,13 @@ function parseBase64Input(value) {
     };
 }
 
-function base64ToBytes(value) {
+function base64ToBytes(value, maxDecodedBytes = Infinity) {
     const parsed = parseBase64Input(value);
+    const padding = parsed.base64.endsWith("==") ? 2 : parsed.base64.endsWith("=") ? 1 : 0;
+    const decodedBytes = (parsed.base64.length / 4) * 3 - padding;
+    if (decodedBytes > maxDecodedBytes) {
+        throw new Error("Decoded file exceeds the 20 MB size limit.");
+    }
     let binary;
 
     try {
@@ -362,7 +367,7 @@ function getDecodedFilename(filename, mime) {
 
 function downloadDecodedFile() {
     try {
-        const { bytes, mime: dataUrlMime } = base64ToBytes(elements.fileBase64Input.value);
+        const { bytes, mime: dataUrlMime } = base64ToBytes(elements.fileBase64Input.value, MAX_FILE_SIZE);
         const mime = dataUrlMime || elements.decodedMime.value.trim() || "application/octet-stream";
         const filename = getDecodedFilename(elements.decodedFilename.value, mime);
         const blob = new Blob([bytes], { type: mime });
