@@ -1,0 +1,17 @@
+name: Hash Generator Validation
+on:
+  push:
+    branches: [main]
+    paths: ["hash/**", ".github/workflows/hash-validation-ci.yml"]
+  pull_request:
+    paths: ["hash/**", ".github/workflows/hash-validation-ci.yml"]
+jobs:
+  node-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: node --check hash/js/app.js
+      - run: node --test hash/tests/*.test.mjs
